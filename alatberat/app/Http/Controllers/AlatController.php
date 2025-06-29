@@ -30,14 +30,11 @@ class AlatController extends Controller
     public function store(Request $request)
     {
         $val = $request->validate([
-            'nama' => 'required|string|max:255|unique:alats',
+            'nama' => 'required|string|max:255',
             'jenis' => 'required|string|max:255',
             'merek' => 'required|string|max:255',
-            'kapasitas' => 'required|string|max:255',
             'tahun_pembelian' => 'required|date_format:Y',
-            'status' => 'required|in:Tersedia,Rusak,Dipinjam',
-            'lokasi' => 'required|string|max:255',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'status' => 'required|in:tersedia,rusak,dipinjam',
         ]);
 
         Alat::create($val);

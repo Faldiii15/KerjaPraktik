@@ -12,15 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('alats', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('nama')->unique();
             $table->string('jenis');
             $table->string('merek');
-            $table->string('kapasitas');
-            $table->string('tahun_pembelian');
-            $table->enum('status', ['Tersedia', 'Rusak', 'Dipinjam']);
-            $table->string('lokasi');
-            $table->string('gambar');
+            $table->year('tahun_pembelian');
+            $table->enum('status', ['tersedia', 'rusak', 'dipinjam'])->default('tersedia');
             $table->timestamps();
         });
     }
