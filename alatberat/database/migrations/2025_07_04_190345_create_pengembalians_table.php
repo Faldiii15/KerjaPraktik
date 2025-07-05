@@ -15,9 +15,9 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('peminjaman_id')->constrained('peminjamen')->onDelete('cascade');
             $table->date('tanggal_kembali')->nullable();
-            $table->string('kondisi_alat')->default('baik'); // Kondisi alat saat dikembalikan, bisa 'baik', 'rusak', atau 'hilang'
-            $table->text('catatan')->nullable(); // Catatan tambahan
-            $table->text('status_pengembalian')->default('pending'); // pending, diterima, ditolak
+            $table->enum('kondisi_alat', ['baik', 'rusak', 'hilang'])->default('baik');
+            $table->text('catatan')->nullable();
+            $table->enum('status_pengembalian', ['pending', 'Diterima', 'ditolak'])->default('pending');
             $table->timestamps();
         });
     }

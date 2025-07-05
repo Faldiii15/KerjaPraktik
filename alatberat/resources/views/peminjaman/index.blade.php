@@ -41,6 +41,8 @@
                                     <span class="text-succes">Disetujui</span>
                                 @elseif($item->status_peminjaman == 'ditolak')
                                     <span class="text-danger">Ditolak</span>
+                                @elseif($item->status_peminjaman == 'dikembalikan')
+                                    <span class="text-primary">selesai</span>
                                 @else
                                     <span class="text-muted">Tidak Diketahui</span>
                                 @endif

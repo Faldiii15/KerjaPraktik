@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('jenis');
             $table->string('merek');
             $table->year('tahun_pembelian');
+            $table->string('foto')->nullable();
             $table->enum('status', ['tersedia', 'rusak', 'dipinjam'])->default('tersedia');
             $table->timestamps();
         });

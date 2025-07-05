@@ -12,11 +12,20 @@
             <div class="row">
                 @forelse($alat as $index => $item)
                     <div class="col-md-4 mb-4">
-                        <div class="card h-100 shadow-sm border-0">
+                        <div class="card h-100 shadow-sm">
+                            {{-- Gambar alat --}}
+                            @if($item->foto && file_exists(public_path('fotoalat/' . $item->foto)))
+                                <img src="{{ asset('fotoalat/' . ($item->foto ?? 'default-tool.jpg')) }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Foto Alat">
+
+                            @else
+                                <img src="{{ asset('fotoalat/genset1.jpg') }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Default Foto">
+                            @endif
+
                             <div class="card-body bg-light">
                                 <h5 class="card-title text-primary">
-                                    <i class="fa fa-tools me-2"></i>{{ $item->nama }}
+                                    <i></i>{{ $item->nama }}
                                 </h5>
+
                                 <ul class="list-group list-group-flush small">
                                     <li class="list-group-item"><strong>No:</strong> {{ $index + 1 }}</li>
                                     <li class="list-group-item"><strong>Kode Alat:</strong> {{ $item->kode_alat }}</li>
@@ -29,16 +38,17 @@
                                             <span class="badge bg-success">Tersedia</span>
                                         @elseif($item->status == 'dipinjam')
                                             <span class="badge bg-danger">Dipinjam</span>
+                                        @elseif($item->status == 'rusak')
+                                            <span class="badge bg-warning text-dark">Rusak</span>
                                         @else
-                                            <span class="badge bg-secondary">{{ $item->status }}</span>
+                                            <span class="badge bg-secondary">Tidak diketahui</span>
                                         @endif
                                     </li>
                                 </ul>
-                                <div class="mt-3">
-                                    <a href="{{ route('alat.edit', $item->id) }}" class="btn btn-warning w-100">
-                                        <i class="fa fa-edit me-1"></i> Edit
-                                    </a>
-                                </div>
+
+                                <a href="{{ route('alat.edit', $item->id) }}" class="btn btn-warning w-100 mt-3">
+                                    <i class="fa fa-edit me-1"></i> Edit
+                                </a>
                             </div>
                         </div>
                     </div>

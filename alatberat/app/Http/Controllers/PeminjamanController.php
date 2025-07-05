@@ -13,7 +13,7 @@ class PeminjamanController extends Controller
      */
     public function index()
     {
-        $peminjaman = Peminjaman::all();
+        $peminjaman = Peminjaman::with('alat')->get();
         return view('peminjaman.index')->with('peminjaman', $peminjaman);
     }
 
@@ -74,11 +74,12 @@ class PeminjamanController extends Controller
             $alat->status = 'dipinjam';
         } elseif ($status === 'ditolak') {
             $alat->status = 'tersedia';
+        } elseif ($status === 'Dikembalikan') {
+            $alat->status = 'tersedia';
         }
 
+
         $alat->save();
-
-
         return redirect()->route('peminjaman.index')->with('success', 'Status peminjaman berhasil diperbarui.');
     }
 

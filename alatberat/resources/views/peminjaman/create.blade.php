@@ -24,23 +24,49 @@
                     @enderror
                 </div>
                 <div class="form-group mt-3">
+                    <label for="nama_pt">Nama PT</label>
+                    <input type="text" name="nama_pt" id="nama_pt" class="form-control" placeholder="Masukkan Nama PT" required>
+                    @error('nama_pt')
+                        <div class="alert alert-danger mt-2">{{ $message }}</div>  
+                    @enderror
+                </div>
+                <div class="form-group mt-3">
                     <label for="nama_peminjam">Nama Peminjam</label>
                     <input type="text" name="nama_peminjam" id="nama_peminjam" class="form-control" placeholder="Masukkan Nama Peminjam" required>
+                    @error('nama_peminjam')
+                        <div class="alert alert-danger mt-2">{{ $message }}</div>  
+                    @enderror
+                </div>
+                <div class="form-group mt-3">
+                    <label for="alamat">Alamat</label>
+                    <input type="text" name="alamat" id="alamat" class="form-control" placeholder="Masukkan Alamat" required>
+                    @error('alamat')
+                        <div class="alert alert-danger mt-2">{{ $message }}</div>  
+                    @enderror
                 </div>
                
                 <div class="form-group mt-3">
                     <label for="tanggal_pinjam">Tanggal Pinjam</label>
                     <input type="date" class="form-control" id="tanggal_pinjam" name="tanggal_pinjam" required>
+                    @error('tanggal_pinjam')
+                        <div class="alert alert-danger mt-2">{{ $message }}</div>  
+                    @enderror
                 </div>
 
                 <div class="form-group mt-3">
                     <label for="tanggal_kembali">Tanggal Kembali</label>
                     <input type="date" class="form-control" id="tanggal_kembali" name="tanggal_kembali" required>
+                    @error('tanggal_kembali')
+                        <div class="alert alert-danger mt-2">{{ $message }}</div>  
+                    @enderror
                 </div>
 
                 <div class="form-group mt-3">
                     <label for="keperluan">Keperluan</label>
                     <input type="text" name="keperluan" id="keperluan" class="form-control" placeholder="Masukkan Keperluan" required>
+                    @error('keperluan')
+                        <div class="alert alert-danger mt-2">{{ $message }}</div>  
+                    @enderror
                 </div>
                 
                 <button type="submit" class="btn btn-primary mt-4">Simpan</button>

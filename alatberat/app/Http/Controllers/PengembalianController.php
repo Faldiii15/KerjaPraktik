@@ -13,7 +13,7 @@ class PengembalianController extends Controller
      */
     public function index()
     {
-        $pengembalian = Pengembalian::all();
+        $pengembalian = Pengembalian::with('peminjaman.alat')->get();
         return view('pengembalian.index')->with('pengembalian', $pengembalian);
     }
 
@@ -22,7 +22,7 @@ class PengembalianController extends Controller
      */
     public function create()
     {
-        $peminjaman = Peminjaman::where('status_peminjaman', 'dipinjam')->get();
+        $peminjaman = Peminjaman::where('status_peminjaman', 'Disetujui')->get();
         return view('pengembalian.create')->with('peminjaman', $peminjaman);
     }
 
@@ -33,22 +33,68 @@ class PengembalianController extends Controller
     {
         $val = $request->validate([
             'peminjaman_id' => 'required|exists:peminjamen,id',
-            'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
-            'kondisi_alat' => 'required|in:baik,rusak,hilang', // Kondisi alat saat dikembalikan
+            'tanggal_kembali' => 'required|date',
+            'kondisi_alat' => 'required|in:baik,rusak,hilang',
             'catatan' => 'nullable|string|max:255',
         ]);
 
-        $val['status_pengembalian'] = 'pending';
+        $peminjaman = Peminjaman::findOrFail($val['peminjaman_id']);
 
-        // Pastikan peminjaman yang dipilih masih dalam status 'dipinjam'
-        $peminjaman = Peminjaman::find($val['peminjaman_id']);
         if ($peminjaman->status_peminjaman !== 'Disetujui') {
             return back()->withErrors(['peminjaman_id' => 'Peminjaman tidak valid.'])->withInput();
         }
 
+        // Validasi tanggal pengembalian tidak boleh terlalu cepat atau terlalu lambat
+        if ($val['tanggal_kembali'] < $peminjaman->tanggal_pinjam) {
+            return back()->withErrors(['tanggal_kembali' => 'Tanggal pengembalian tidak boleh sebelum tanggal pinjam.'])->withInput();
+        }
+
+        if ($val['tanggal_kembali'] > $peminjaman->tanggal_kembali) {
+            return back()->withErrors(['tanggal_kembali' => 'Tanggal pengembalian melebihi batas waktu.'])->withInput();
+        }
+
+        $val['status_pengembalian'] = 'pending';
         Pengembalian::create($val);
 
         return redirect()->route('pengembalian.index')->with('success', 'Pengembalian berhasil ditambahkan.');
+    }
+
+    public function acc(Request $request, $id)
+    {
+        $pengembalian = Pengembalian::findOrFail($id);
+        $status = $request->input('status_pengembalian');
+
+        // Validasi status
+        if (!in_array($status, ['Diterima', 'ditolak'])) {
+            return back()->withErrors(['status_pengembalian' => 'Status tidak valid.']);
+        }
+
+        $pengembalian->status_pengembalian = $status;
+        $pengembalian->save();
+
+        // Jika disetujui, ubah status alat menjadi dipinjam
+        $peminjaman = $pengembalian->peminjaman;
+        $alat = $peminjaman->alat;
+
+        if ($status === 'Diterima') {
+            $peminjaman->status_peminjaman = 'dikembalikan';
+            
+            if ($peminjaman->alat) {
+            $peminjaman->alat->status = 'tersedia';
+            $peminjaman->alat->save();
+        }
+
+        } elseif ($status === 'ditolak') {
+            $peminjaman->status_peminjaman = 'Disetujui';
+
+            if ($alat) {
+            $alat->status = 'dipinjam';
+            $alat->save();
+        }
+        }
+
+        $peminjaman->save();
+        return redirect()->route('pengembalian.index')->with('success', 'Status pengembalian berhasil diperbarui.');
     }
 
     /**

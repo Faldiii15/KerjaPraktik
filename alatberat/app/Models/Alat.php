@@ -18,6 +18,7 @@ class Alat extends Model
         'jenis',
         'merek',
         'tahun_pembelian',
+        'foto',
         'status'
     ];
 

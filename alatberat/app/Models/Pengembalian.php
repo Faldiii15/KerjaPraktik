@@ -2,9 +2,13 @@
 
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
 class Pengembalian extends Model
 {
+    use HasFactory;
+
     protected $table = 'pengembalians';
     protected $primaryKey = 'id';
     public $incrementing = false;
@@ -24,13 +28,13 @@ class Pengembalian extends Model
 
         static::creating(function ($model) {
             if (!$model->getKey()) {
-                $model->{$model->getKeyName()} = (string) \Illuminate\Support\Str::uuid();
+                $model->{$model->getKeyName()} = (string) Str::uuid();
             }
         });
     }
 
     public function peminjaman()
     {
-        return $this->belongsTo(Peminjaman::class , 'peminjaman_id','id');
+        return $this->belongsTo(Peminjaman::class , 'peminjaman_id');
     }
 }
