@@ -23,6 +23,7 @@
                         <div class="alert alert-danger mt-2">{{ $message }}</div>  
                     @enderror
                 </div>
+                
                 <div class="form-group mt-3">
                     <label for="tanggal_kembali">Tanggal Kembali</label>
                     <input type="date" class="form-control" id="tanggal_kembali" name="tanggal_kembali" required>
@@ -39,21 +40,12 @@
                         <div class="alert alert-danger mt-2">{{ $message }}</div>
                     @enderror
                 </div>  
+
                 <div class="form-group mt-3">
                     <label for="catatan">Catatan</label>
                     <textarea class="form-control" id="catatan" name="catatan" rows="3">{{ old('catatan') }}</textarea>
                 </div>
-                <div class="form-group mt-3">
-                    <label for="status_pengembalian">Status Pengembalian</label>
-                    <select class="form-control" id="status_pengembalian" name="status_pengembalian" required>
-                        <option value="pending" {{ old('status_pengembalian') == 'pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="diterima" {{ old('status_pengembalian') == 'diterima' ? 'selected' : '' }}>Diterima</option>
-                        <option value="ditolak" {{ old('status_pengembalian') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
-                    </select>
-                    @error('status_pengembalian')
-                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                    @enderror
-                </div>
+    
                 <div class="mt-3">
                     <button type="submit" class="btn btn-primary">Simpan</button>
                     <a href="{{ route('pengembalian.index') }}" class="btn btn-transparent">Batal</a>

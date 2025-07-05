@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('peminjamen', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('alat_id')->constrained('alats')->onDelete('cascade');
+            $table->string('nama_pt')->unique();
             $table->string('nama_peminjam')->unique();
+            $table->string('alamat')->unique();
             $table->date('tanggal_pinjam')->nullable();
             $table->date('tanggal_kembali')->nullable();
             $table->text('keperluan')->nullable();

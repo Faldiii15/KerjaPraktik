@@ -35,7 +35,6 @@ class AlatController extends Controller
             'jenis' => 'required|string|max:255',
             'merek' => 'required|string|max:255',
             'tahun_pembelian' => 'required|date_format:Y',
-            'status' => 'required|in:tersedia,rusak,dipinjam',
         ]);
 
         Alat::create($val);
@@ -69,7 +68,6 @@ class AlatController extends Controller
             'jenis' => 'required|string|max:255',
             'merek' => 'required|string|max:255',
             'tahun_pembelian' => 'required|date_format:Y',
-            'status' => 'required|in:tersedia,rusak,dipinjam',
         ]);
 
         $alat->update($val);

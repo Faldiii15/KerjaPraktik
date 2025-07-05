@@ -8,12 +8,14 @@
         <div class="col-md-12">
             <h1 class="h3">Peminjaman Alat Berat</h1>
             <a href="{{ route('peminjaman.create') }}" class="btn btn-primary">Tambah Peminjaman</a>
-            <table class="table table-bordered">
-                <thead class="thead-light">
-                    <tr>
+            <table class="table table-bordered table-striped table-hover table-primary align-middle text-center mt-3">
+                <thead class="table-primary">
+                    <tr class="text-center">
                         <th>No</th>
                         <th>Nama Alat</th>
+                        <th>Nama PT</th>
                         <th>Nama Peminjam</th>
+                        <th>Alamat</th>
                         <th>Tanggal Pinjam</th>
                         <th>Tanggal Kembali</th>
                         <th>Keperluan</th>
@@ -23,17 +25,19 @@
                 </thead>
                 <tbody>
                     @forelse($peminjaman as $index => $item)
-                        <tr>
+                        <tr class="text-center">
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $item->alat->nama ?? '-' }}</td>
+                            <td>{{ $item->nama_pt ?? '-' }}</td>
                             <td>{{ $item->nama_peminjam ?? '-' }}</td>
+                            <td>{{ $item->alamat ?? '-' }}</td>
                             <td>{{ $item->tanggal_pinjam }}</td>
                             <td>{{ $item->tanggal_kembali }}</td>
                             <td>{{ $item->keperluan ?? '-' }}</td>
                             <td class="text">
                                 @if($item->status_peminjaman == 'pending')
                                     <span class="text-warning">Pending</span>
-                                @elseif($item->status_peminjaman == 'dipinjam')
+                                @elseif($item->status_peminjaman == 'Disetujui')
                                     <span class="text-succes">Disetujui</span>
                                 @elseif($item->status_peminjaman == 'ditolak')
                                     <span class="text-danger">Ditolak</span>
@@ -51,7 +55,7 @@
                                     <form action="{{ route('peminjaman.acc', $item->id) }}" method="POST">
                                         @csrf
                                         @method('PUT')
-                                        <button type="submit" name="status_peminjaman" value="dipinjam" class="dropdown-item text-success bg-transparent border-0">Setujui</button>
+                                        <button type="submit" name="status_peminjaman" value="Disetujui" class="dropdown-item text-success bg-transparent border-0">Setujui</button>
                                         <button type="submit" name="status_peminjaman" value="ditolak" class="dropdown-item text-danger bg-transparent border-0">Tolak</button>
                                     </form>
                                 </div>
@@ -59,7 +63,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center">Data peminjaman belum tersedia.</td>
+                            <td colspan="10" class="text-center">Data peminjaman belum tersedia.</td>
                         </tr>
                     @endforelse
                 </tbody>

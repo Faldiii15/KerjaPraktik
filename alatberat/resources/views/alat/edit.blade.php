@@ -45,7 +45,7 @@
                         <div class="alert alert-danger mt-2">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-group mt-3">
+                {{-- <div class="form-group mt-3">
                     <label for="status">Status</label>
                     <select class="form-control" id="status" name="status" required>
                         <option value="tersedia" {{ old('status', $alat['status']) == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
@@ -55,7 +55,7 @@
                     @error('status')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> --}}
                 <div class="mt-3">
                     <button type="submit" class="btn btn-primary">Simpan</button>
                     <a href="{{ route('alat.index') }}" class="btn btn-transparant">Batal</a>

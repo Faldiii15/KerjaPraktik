@@ -32,7 +32,9 @@ class PeminjamanController extends Controller
     {
         $val = $request->validate([
             'alat_id' => 'required|exists:alats,id',
+            'nama_pt' => 'required|string|max:225',
             'nama_peminjam' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
             'tanggal_pinjam' => 'required|date',
             'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
             'keperluan' => 'required|string|max:255',
@@ -58,7 +60,7 @@ class PeminjamanController extends Controller
         $status = $request->input('status_peminjaman');
 
         // Validasi status
-        if (!in_array($status, ['dipinjam', 'ditolak'])) {
+        if (!in_array($status, ['Disetujui', 'ditolak'])) {
             return back()->withErrors(['status_peminjaman' => 'Status tidak valid.']);
         }
 
@@ -68,7 +70,7 @@ class PeminjamanController extends Controller
         // Jika disetujui, ubah status alat menjadi dipinjam
         $alat = $peminjaman->alat;
 
-        if ($status === 'dipinjam') {
+        if ($status === 'Disetujui') {
             $alat->status = 'dipinjam';
         } elseif ($status === 'ditolak') {
             $alat->status = 'tersedia';

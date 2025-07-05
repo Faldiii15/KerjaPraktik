@@ -42,7 +42,7 @@ class PengembalianController extends Controller
 
         // Pastikan peminjaman yang dipilih masih dalam status 'dipinjam'
         $peminjaman = Peminjaman::find($val['peminjaman_id']);
-        if ($peminjaman->status_peminjaman !== 'dipinjam') {
+        if ($peminjaman->status_peminjaman !== 'Disetujui') {
             return back()->withErrors(['peminjaman_id' => 'Peminjaman tidak valid.'])->withInput();
         }
 

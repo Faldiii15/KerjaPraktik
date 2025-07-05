@@ -44,17 +44,7 @@
                         <div class="alert alert-danger mt-2">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-group mt-3">
-                    <label for="status">Status</label>
-                    <select class="form-control" id="status" name="status" required>
-                        <option value="tersedia">Tersedia</option>
-                        <option value="rusak">Rusak</option>
-                        <option value="dipinjam">Dipinjam</option>
-                    </select>
-                    @error('status')
-                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                    @enderror
-                </div>  
+  
                 <div class="mt-3">
                     <button type="submit" class="btn btn-primary">Simpan</button>
                     <a href="{{ route('alat.index') }}" class="btn btn-transparant">Batal</a>
