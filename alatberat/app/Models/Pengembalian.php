@@ -1,24 +1,21 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-class Peminjaman extends Model
+
+class Pengembalian extends Model
 {
-    use HasFactory;
-    protected $table = 'peminjamen';
+    protected $table = 'pengembalians';
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-        'alat_id',
-        'nama_peminjam',
-        'tanggal_pinjam',
+        'peminjaman_id',
         'tanggal_kembali',
-        'keperluan',
-        'status_peminjaman',
+        'kondisi_alat', // Kondisi alat saat dikembalikan, bisa 'baik', 'rusak', atau 'hilang'
+        'catatan',
+        'status_pengembalian',
     ];
 
     protected static function boot()
@@ -32,8 +29,8 @@ class Peminjaman extends Model
         });
     }
 
-    public function alat()
+    public function peminjaman()
     {
-        return $this->belongsTo(Alat::class, 'alat_id', 'id');
+        return $this->belongsTo(Peminjaman::class , 'peminjaman_id','id');
     }
 }

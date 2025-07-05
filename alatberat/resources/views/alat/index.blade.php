@@ -12,9 +12,10 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Kode Alat</th>
                         <th>Nama Alat</th>
                         <th>Jenis Alat</th>
-                        <th>Merek</th>
+                        <th>Merk</th>
                         <th>Tahun Pembelian</th>
                         <th>Status</th>
                         <th>Aksi</th>
@@ -24,6 +25,7 @@
                     @foreach($alat as $index => $item)
                         <tr>
                             <td>{{ $index +1 }}</td>
+                            <td>{{ $item->kode_alat }}</td>
                             <td>{{ $item->nama }}</td>
                             <td>{{ $item->jenis }}</td>
                             <td>{{ $item->merek }}</td>
@@ -31,10 +33,6 @@
                             <td>{{ $item->status }}</td>
                             <td>
                                 <a href="{{ route('alat.edit', $item->id) }}" class="btn btn-warning">Edit</a>
-                                <form action="{{ route('alat.destroy', $item->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Hapus</button>
                                 </form>
                             </td>
                         </tr>

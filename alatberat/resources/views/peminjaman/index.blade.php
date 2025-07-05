@@ -3,50 +3,68 @@
 @section('title', 'Peminjaman Alat Berat')
 
 @section('content')
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3">Peminjaman Alat Berat</h1>
-        <a href="{{ route('peminjaman.create') }}" class="btn btn-primary">Tambah Peminjaman</a>
-    </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="h3">Peminjaman Alat Berat</h1>
+            <a href="{{ route('peminjaman.create') }}" class="btn btn-primary">Tambah Peminjaman</a>
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Alat</th>
+                        <th>Nama Peminjam</th>
+                        <th>Tanggal Pinjam</th>
+                        <th>Tanggal Kembali</th>
+                        <th>Keperluan</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($peminjaman as $index => $item)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $item->alat->nama ?? '-' }}</td>
+                            <td>{{ $item->nama_peminjam ?? '-' }}</td>
+                            <td>{{ $item->tanggal_pinjam }}</td>
+                            <td>{{ $item->tanggal_kembali }}</td>
+                            <td>{{ $item->keperluan ?? '-' }}</td>
+                            <td class="text">
+                                @if($item->status_peminjaman == 'pending')
+                                    <span class="text-warning">Pending</span>
+                                @elseif($item->status_peminjaman == 'dipinjam')
+                                    <span class="text-succes">Disetujui</span>
+                                @elseif($item->status_peminjaman == 'ditolak')
+                                    <span class="text-danger">Ditolak</span>
+                                @else
+                                    <span class="text-muted">Tidak Diketahui</span>
+                                @endif
+                            </td>
+                            <td class="dropdown text-center">
+                                <button type="button" class="btn p-0 hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots-vertical fs-5"></i>
+                                </button>
 
-    <table class="table table-bordered">
-        <thead class="thead-light">
-            <tr>
-                <th>No</th>
-                <th>Nama Alat</th>
-                <th>Nama Peminjam</th>
-                <th>Tanggal Pinjam</th>
-                <th>Tanggal Kembali</th>
-                <th>Keperluan</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($peminjaman as $index => $item)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $item->alat->nama ?? '-' }}</td>
-                    <td>{{ $item->user->name ?? '-' }}</td>
-                    <td>{{ $item->tanggal_pinjam }}</td>
-                    <td>{{ $item->tanggal_kembali }}</td>
-                    <td>{{ $item->keperluan ?? '-' }}</td>
-                    <td>{{ ucfirst($item->status_peminjaman) }}</td>
-                    <td>
-                        <a href="{{ route('peminjaman.edit', $item->id_peminjaman) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="{{ route('peminjaman.destroy', $item->id_peminjaman) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-sm btn-danger">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="8" class="text-center">Data peminjaman belum tersedia.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+                                <div class="dropdown-menu">
+                                    <a href="{{ route('peminjaman.edit', $item->id) }}" class="dropdown-item text-dark">Edit</a>
+                                    <form action="{{ route('peminjaman.acc', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" name="status_peminjaman" value="dipinjam" class="dropdown-item text-success bg-transparent border-0">Setujui</button>
+                                        <button type="submit" name="status_peminjaman" value="ditolak" class="dropdown-item text-danger bg-transparent border-0">Tolak</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="text-center">Data peminjaman belum tersedia.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 @endsection

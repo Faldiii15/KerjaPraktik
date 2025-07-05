@@ -12,11 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('peminjamen', function (Blueprint $table) {
-            $table->uuid('id_peminjaman')->primary();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('alat_id')->constrained('alats')->onDelete('cascade');
             $table->string('nama_peminjam')->unique();
             $table->date('tanggal_pinjam')->nullable();
             $table->date('tanggal_kembali')->nullable();
-            $table->text('keperluan')->nullable();;
+            $table->text('keperluan')->nullable();
+            $table->text('status_peminjaman')->default('pending');
             $table->timestamps();
         });
     }

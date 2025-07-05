@@ -11,7 +11,7 @@
 
     <!-- Favicon -->
     <link href="{{ url("img/favicon.ico") }} rel="icon">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,7 +63,7 @@
                     <a href="index.html" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="{{ url('alat') }}" class="nav-item nav-link"><i class="fa fa-tractor me-2"></i> Alat Berat</a>
                     <a href="{{ url('peminjaman') }}" class="nav-item nav-link"><i class="fa fa-file-alt me-2"></i>Peminjaman Alat</a>
-                    <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Pengembalian Alat</a>
+                    <a href="{{ url('pengembalian') }}" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Pengembalian Alat</a>
                     <a href="{{ url('Riwayat Peminjaman') }}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Riwayat Peminjaman</a>
                     <a href="{{ url('Riwayat Pengembalian') }}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Riwayat Pengembalian</a>
                     <div class="nav-item dropdown">

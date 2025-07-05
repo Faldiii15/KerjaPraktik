@@ -13,6 +13,7 @@ class Alat extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'kode_alat',
         'nama',
         'jenis',
         'merek',
