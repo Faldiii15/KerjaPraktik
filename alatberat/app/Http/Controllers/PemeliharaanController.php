@@ -68,7 +68,11 @@ class PemeliharaanController extends Controller
      */
     public function edit(Pemeliharaan $pemeliharaan)
     {
-        @$alat = Alat::where('status', 'tersedia')->get();
+       $alat = Alat::where('status', 'tersedia')
+        ->orWhere('id', $pemeliharaan->alat_id) // tambahkan alat yg sedang dipinjam user ini
+        ->get();
+        return view('pemeliharaan.edit')->with('pemeliharaan', $pemeliharaan)->with('alat', $alat);
+    
         return view('pemeliharaan.edit')->with('pemeliharaan', $pemeliharaan);
     }
 
