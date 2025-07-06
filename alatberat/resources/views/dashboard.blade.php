@@ -1,4 +1,4 @@
-@extends('layout.main')
+@extends('layouts.main')
 @section('title', 'Dashboard')  
 @section('content')
     <x-app-layout>

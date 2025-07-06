@@ -9,6 +9,8 @@ usE App\Http\Controllers\Auth\RegisteredUserController;
 use App\Models\Alat;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
+use App\Http\Controllers\LaporanController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,5 +32,10 @@ Route::put('peminjaman/{id}/acc', [PeminjamanController::class, 'acc'])->name('p
 Route::resource('pengembalian', PengembalianController::class);
 Route::put('pengembalian/{id}/acc', [PengembalianController::class, 'acc'])->name('pengembalian.acc');
 Route::resource('pemeliharaan', PemeliharaanController::class);
+
+Route::get('laporan/alat', [LaporanController::class, 'laporanAlat'])->name('laporan.alat');
+Route::get('/laporan/alat/pdf', [LaporanController::class, 'exportAlat'])->name('laporan.alat.pdf');
+
+
 
 require __DIR__.'/auth.php';

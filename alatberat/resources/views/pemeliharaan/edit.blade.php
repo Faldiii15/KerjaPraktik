@@ -1,4 +1,4 @@
-@extends('layout.main')
+@extends('layouts.main')
 @section('title', 'Edit Pemeliharaan Alat Berat')
 
 @section('content')
