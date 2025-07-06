@@ -42,6 +42,7 @@ class PeminjamanController extends Controller
 
         // Tambahkan status default
         $val['status_peminjaman'] = 'pending';
+        // $val['user_id'] = auth()->id();
 
         // Pastikan alat tersedia
         $alat = Alat::find($val['alat_id']);

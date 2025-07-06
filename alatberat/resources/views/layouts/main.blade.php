@@ -65,8 +65,27 @@
                     <a href="{{ url('peminjaman') }}" class="nav-item nav-link"><i class="fa fa-industry me-2"></i>Peminjaman Alat</a>
                     <a href="{{ url('pengembalian') }}" class="nav-item nav-link"><i class="fa fa-truck"></i>Pengembalian Alat</a>
                     <a href="{{ url('pemeliharaan') }}" class="nav-item nav-link"><i class="fa fa-truck"></i>Pemeliharaan Alat</a>
-                    <a href="{{ url('laporan/alat') }}" class="nav-item nav-link"><i class="fa fa-file me-2"></i>Laporan</a>
-                <</div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-file me-2"></i>Laporan
+                        </a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{{ url('laporan/alat') }}" class="dropdown-item">
+                               <i class="fa fa-file me-2"></i>Laporan Alat Berat
+                            </a>
+                            <a href="{{ url('laporan/peminjaman') }}" class="dropdown-item">
+                                <i class="fa fa-file me-2"></i>Laporan Peminjaman
+                            </a>
+                            <a href="{{ url('laporan/pengembalian') }}" class="dropdown-item">
+                                <i class="fa fa-file me-2"></i>Laporan Pengembalian
+                            </a>
+                            <a href="{{ url('laporan/pemeliharaan') }}" class="dropdown-item">
+                                <i class="fa fa-file me-2"></i>Laporan Pemeliharaan
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
             </nav>
         </div>
         <!-- Sidebar End -->

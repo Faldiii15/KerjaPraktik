@@ -35,6 +35,9 @@ Route::resource('pemeliharaan', PemeliharaanController::class);
 
 Route::get('laporan/alat', [LaporanController::class, 'laporanAlat'])->name('laporan.alat');
 Route::get('/laporan/alat/pdf', [LaporanController::class, 'exportAlat'])->name('laporan.alat.pdf');
+Route::get('/laporan/peminjaman', [LaporanController::class, 'laporanPeminjaman'])->name('laporan.peminjaman');
+Route::get('/laporan/peminjaman/pdf', [LaporanController::class, 'exportPeminjaman'])->name('laporan.peminjaman.pdf');
+
 
 
 

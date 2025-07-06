@@ -38,4 +38,9 @@ class Peminjaman extends Model
     {
         return $this->belongsTo(Alat::class, 'alat_id', 'id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    
 }
