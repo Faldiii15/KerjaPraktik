@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('alats', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('kode_alat')->unique();
-            $table->string('nama')->unique();
+            $table->string('kode_alat')->unique(); ;
+            $table->string('nama');
             $table->string('jenis');
             $table->string('merek');
             $table->year('tahun_pembelian');
             $table->string('foto')->nullable();
-            $table->enum('status', ['tersedia', 'rusak', 'dipinjam'])->default('tersedia');
+            $table->enum('status', ['tersedia', 'rusak', 'dipinjam', 'diperbaiki'])->default('tersedia');
             $table->timestamps();
         });
     }

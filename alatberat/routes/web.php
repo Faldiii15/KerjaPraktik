@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AlatController;
+use App\Http\Controllers\PemeliharaanController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\ProfileController;
+usE App\Http\Controllers\Auth\RegisteredUserController;
 use App\Models\Alat;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
@@ -24,6 +26,9 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('alat', AlatController::class);
 Route::resource('peminjaman', PeminjamanController::class);
-Route::resource('Pengembalian', PengembalianController::class);
+Route::put('peminjaman/{id}/acc', [PeminjamanController::class, 'acc'])->name('peminjaman.acc');
+Route::resource('pengembalian', PengembalianController::class);
+Route::put('pengembalian/{id}/acc', [PengembalianController::class, 'acc'])->name('pengembalian.acc');
+Route::resource('pemeliharaan', PemeliharaanController::class);
 
 require __DIR__.'/auth.php';

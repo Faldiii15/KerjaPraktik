@@ -1,5 +1,4 @@
 @extends('layout.main')
-
 @section('title', 'Peminjaman Alat Berat')
 
 @section('content')
@@ -12,7 +11,7 @@
                 <div class="form-group">
                     <label for="alat_id">Pilih Alat Berat</label>
                     <select class="form-control" id="alat_id" name="alat_id" required>
-                        <option value="">-- Pilih Alat Berat --</option>
+                        <option value="">Pilih Alat Berat</option>
                         @foreach($alat as $item)
                             <option value="{{ $item->id }}" {{ old('alat_id') == $item->id ? 'selected' : '' }}>
                                 {{ $item->kode_alat }} - {{ $item->nama }}
@@ -25,7 +24,18 @@
                 </div>
                 <div class="form-group mt-3">
                     <label for="nama_pt">Nama PT</label>
-                    <input type="text" name="nama_pt" id="nama_pt" class="form-control" placeholder="Masukkan Nama PT" required>
+                    <select name="nama_pt" id="nama_pt" class="form-control" required>
+                        <option value="">Pilih Nama PT</option>
+                        <option value="PT Arina Jaya Bersama" {{ old('nama_pt') == 'PT Arina Jaya Bersama' ? 'selected' : '' }}>
+                            PT Arina Jaya Bersama
+                        </option>
+                        <option value="PT Suma Java Berjaya" {{ old('nama_pt') == 'PT Suma Java Berjaya' ? 'selected' : '' }}>
+                            PT Suma Java Berjaya
+                        </option>
+                        <option value="PT Putra Kayu Agung" {{ old('nama_pt') == 'PT Putra Kayu Agung' ? 'selected' : '' }}>
+                            PT Putra Kayu Agung
+                        </option>
+                    </select>
                     @error('nama_pt')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>  
                     @enderror

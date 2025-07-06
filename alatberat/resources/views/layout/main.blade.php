@@ -64,6 +64,7 @@
                     <a href="{{ url('alat') }}" class="nav-item nav-link"><i class="fa fa-tractor me-2"></i> Alat Berat</a>
                     <a href="{{ url('peminjaman') }}" class="nav-item nav-link"><i class="fa fa-industry me-2"></i>Peminjaman Alat</a>
                     <a href="{{ url('pengembalian') }}" class="nav-item nav-link"><i class="fa fa-truck"></i>Pengembalian Alat</a>
+                    <a href="{{ url('pemeliharaan') }}" class="nav-item nav-link"><i class="fa fa-truck"></i>Pemeliharaan Alat</a>
                     <a href="{{ url('Riwayat Peminjaman') }}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Riwayat Peminjaman</a>
                     <a href="{{ url('Riwayat Pengembalian') }}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Riwayat Pengembalian</a>
                     <div class="nav-item dropdown">

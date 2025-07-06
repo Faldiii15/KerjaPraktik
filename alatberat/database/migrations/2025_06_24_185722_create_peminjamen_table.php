@@ -15,8 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('alat_id')->constrained('alats')->onDelete('cascade');
             $table->string('nama_pt')->unique();
-            $table->string('nama_peminjam')->unique();
-            $table->string('alamat')->unique();
+            $table->string('nama_peminjam');
+            $table->string('alamat');
             $table->date('tanggal_pinjam')->nullable();
             $table->date('tanggal_kembali')->nullable();
             $table->text('keperluan')->nullable();

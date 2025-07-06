@@ -38,6 +38,8 @@
                                             <span class="badge bg-success">Tersedia</span>
                                         @elseif($item->status == 'dipinjam')
                                             <span class="badge bg-danger">Dipinjam</span>
+                                        @elseif($item->status == 'diperbaiki')
+                                            <span class="badge bg-info text-dark">Dalam Perbaikan</span>
                                         @elseif($item->status == 'rusak')
                                             <span class="badge bg-warning text-dark">Rusak</span>
                                         @else

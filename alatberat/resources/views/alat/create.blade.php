@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1>Tambah Alat Berat</h1>
-            <form action="{{ route('alat.store') }}" method="POST" enctype="multipart/form-data"> {{-- ⬅ Tambahkan ini --}}
+            <form action="{{ route('alat.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-group mt-3">
