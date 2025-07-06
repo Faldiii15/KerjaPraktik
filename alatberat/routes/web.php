@@ -37,6 +37,12 @@ Route::get('laporan/alat', [LaporanController::class, 'laporanAlat'])->name('lap
 Route::get('/laporan/alat/pdf', [LaporanController::class, 'exportAlat'])->name('laporan.alat.pdf');
 Route::get('/laporan/peminjaman', [LaporanController::class, 'laporanPeminjaman'])->name('laporan.peminjaman');
 Route::get('/laporan/peminjaman/pdf', [LaporanController::class, 'exportPeminjaman'])->name('laporan.peminjaman.pdf');
+Route::get('/laporan/pengembalian', [LaporanController::class, 'laporanPengembalian'])->name('laporan.pengembalian');
+Route::get('/laporan/pengembalian/pdf', [LaporanController::class, 'exportPengembalian'])->name('laporan.pengembalian.pdf');
+Route::get('/laporan/pemeliharaan', [LaporanController::class, 'laporanPemeliharaan'])->name('laporan.pemeliharaan');
+Route::get('/laporan/pemeliharaan/pdf', [LaporanController::class, 'laporanPemeliharaanPDF'])->name('laporan.pemeliharaan.pdf');
+
+
 
 
 
