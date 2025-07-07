@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="index.html" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="{{ route('dashboard') }}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="{{ url('alat') }}" class="nav-item nav-link"><i class="fa fa-tractor me-2"></i> Alat Berat</a>
                     <a href="{{ url('peminjaman') }}" class="nav-item nav-link"><i class="fa fa-industry me-2"></i>Peminjaman Alat</a>
                     <a href="{{ url('pengembalian') }}" class="nav-item nav-link"><i class="fa fa-truck"></i>Pengembalian Alat</a>
@@ -111,9 +111,18 @@
                             <span class="d-none d-lg-inline-flex">John Doe</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
-                            <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
+                            {{-- <a href="#" class="dropdown-item">My Profile</a>
+                            <a href="#" class="dropdown-item">Settings</a> --}}
+                            {{-- <a href="{{ url("logout") }}" class="dropdown-item">Log Out</a> --}}
+                            <li>
+                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="bx bx-power-off me-2"></i>
+                                    <span class="align-middle">Log Out</span>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                    </form>
+                                </a>
+                                </li>
                         </div>
                     </div>
                 </div>

@@ -110,15 +110,28 @@ class PengembalianController extends Controller
      */
     public function edit(Pengembalian $pengembalian)
     {
-        //
+        $peminjaman = Peminjaman::where('status_peminjaman', 'Disetujui')->get();
+        return view('pengembalian.edit', compact('pengembalian', 'peminjaman'));
     }
+
+    
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Pengembalian $pengembalian)
     {
-        //
+        $val = $request->validate([
+            'peminjaman_id' => 'required|exists:peminjamen,id',
+            'tanggal_kembali' => 'required|date',
+            'kondisi_alat' => 'required|in:baik,rusak,hilang',
+            'catatan' => 'nullable|string|max:255',
+        ]);
+
+        $pengembalian->update($val);
+
+        return redirect()->route('pengembalian.index')->with('success', 'Pengembalian berhasil diperbarui.');
+        
     }
 
     /**

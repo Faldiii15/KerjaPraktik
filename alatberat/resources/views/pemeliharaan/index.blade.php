@@ -43,7 +43,8 @@
                                 </button>
 
                                 <div class="dropdown-menu">
-                                    <a href="{{ route('pemeliharaan.edit', $item->id) }}" class="dropdown-item text-dark">Edit</a>
+                                    <a href="{{ route('pemeliharaan.edit', $item->id) }}" 
+                                        class="dropdown-item text-dark">Edit</a>
                                 </div>
                             </td>
                         </tr>

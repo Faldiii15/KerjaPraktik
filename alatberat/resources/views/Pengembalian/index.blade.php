@@ -50,8 +50,10 @@
                             <form action="{{ route('pengembalian.acc', $item->id) }}" method="POST">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" name="status_pengembalian" value="Diterima" class="dropdown-item text-success bg-transparent border-0">Setujui</button>
-                                <button type="submit" name="status_pengembalian" value="ditolak" class="dropdown-item text-danger bg-transparent border-0">Tolak</button>
+                                <button type="submit" name="status_pengembalian" value="Diterima" 
+                                class="dropdown-item text-success bg-transparent border-0">Setujui</button>
+                                <button type="submit" name="status_pengembalian" value="ditolak" 
+                                class="dropdown-item text-danger bg-transparent border-0">Tolak</button>
                             </form>
                         </div>
                     </td>

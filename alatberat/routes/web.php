@@ -11,14 +11,19 @@ use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 use App\Http\Controllers\LaporanController;
 
+use App\Http\Controllers\DashboardController;
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth', 'verified')->name('dashboard');
+
+
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -26,6 +31,22 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Route::middleware(['auth', 'role:A,U'])->group(function () {
+//     Route::get('/alat', [AlatController::class, 'index'])->name('alat.index');
+//     Route::get('/alat/create', [AlatController::class, 'create'])->name('alat.create');
+//     Route::post('/alat/store', [AlatController::class, 'store'])->name('alat.store');
+//     Route::get('/alat/{id}/edit', [AlatController::class, 'edit'])->name('alat.edit');
+//     Route::put('/alat/{id}/update', [AlatController::class, 'update'])->name('alat.update');
+// });
+
+
+// Route::middleware(['auth', 'role:A'])->group(function () {
+//     Route::get('/alat', [AlatController::class, 'index'])->name('alat.index');
+//     Route::get("/alat/create", [AlatController::class, 'create'])->name('alat.create');
+//     Route::post("/alat/store", [AlatController::class, 'store'])->name('alat.store');
+//     Route::get("/alat/{id}/edit", [AlatController::class, 'edit'])->name('alat.edit');
+//     Route::put("/alat/{id}/update", [AlatController::class, 'update'])->name('alat.update');
+// });
 Route::resource('alat', AlatController::class);
 Route::resource('peminjaman', PeminjamanController::class);
 Route::put('peminjaman/{id}/acc', [PeminjamanController::class, 'acc'])->name('peminjaman.acc');
@@ -33,14 +54,19 @@ Route::resource('pengembalian', PengembalianController::class);
 Route::put('pengembalian/{id}/acc', [PengembalianController::class, 'acc'])->name('pengembalian.acc');
 Route::resource('pemeliharaan', PemeliharaanController::class);
 
+Route::middleware(['auth', 'role:A'])->group(function () {
+});
+
+
 Route::get('laporan/alat', [LaporanController::class, 'laporanAlat'])->name('laporan.alat');
-Route::get('/laporan/alat/pdf', [LaporanController::class, 'exportAlat'])->name('laporan.alat.pdf');
-Route::get('/laporan/peminjaman', [LaporanController::class, 'laporanPeminjaman'])->name('laporan.peminjaman');
-Route::get('/laporan/peminjaman/pdf', [LaporanController::class, 'exportPeminjaman'])->name('laporan.peminjaman.pdf');
-Route::get('/laporan/pengembalian', [LaporanController::class, 'laporanPengembalian'])->name('laporan.pengembalian');
-Route::get('/laporan/pengembalian/pdf', [LaporanController::class, 'exportPengembalian'])->name('laporan.pengembalian.pdf');
-Route::get('/laporan/pemeliharaan', [LaporanController::class, 'laporanPemeliharaan'])->name('laporan.pemeliharaan');
-Route::get('/laporan/pemeliharaan/pdf', [LaporanController::class, 'laporanPemeliharaanPDF'])->name('laporan.pemeliharaan.pdf');
+    Route::get('/laporan/alat/pdf', [LaporanController::class, 'exportAlat'])->name('laporan.alat.pdf');
+    Route::get('/laporan/peminjaman', [LaporanController::class, 'laporanPeminjaman'])->name('laporan.peminjaman');
+    Route::get('/laporan/peminjaman/pdf', [LaporanController::class, 'exportPeminjaman'])->name('laporan.peminjaman.pdf');
+    Route::get('/laporan/pengembalian', [LaporanController::class, 'laporanPengembalian'])->name('laporan.pengembalian');
+    Route::get('/laporan/pengembalian/pdf', [LaporanController::class, 'exportPengembalian'])->name('laporan.pengembalian.pdf');
+    Route::get('/laporan/pemeliharaan', [LaporanController::class, 'laporanPemeliharaan'])->name('laporan.pemeliharaan');
+    Route::get('/laporan/pemeliharaan/pdf', [LaporanController::class, 'laporanPemeliharaanPDF'])->name('laporan.pemeliharaan.pdf');
+
 
 
 

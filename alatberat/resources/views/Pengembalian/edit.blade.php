@@ -14,7 +14,7 @@
                     <label for="peminjaman_id">Pilih Peminjaman</label>
                     <select class="form-control" id="peminjaman_id" name="peminjaman_id" required>
                         <option value="">-- Pilih Peminjaman --</option>
-                        @foreach($peminjamans as $item)
+                        @foreach($peminjaman as $item)
                             <option value="{{ $item->id }}" {{ old('peminjaman_id', $pengembalian->peminjaman_id) == $item->id ? 'selected' : '' }}>
                                 {{ $item->nama_peminjam }} - {{ $item->alat->nama ?? '-' }}
                             </option>
