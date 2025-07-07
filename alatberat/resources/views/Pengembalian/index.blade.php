@@ -5,6 +5,7 @@
 @section('content')
 <div class="container">
     <h1 class="h3">Daftar Pengembalian Alat Berat</h1>
+    
     <a href="{{ route('pengembalian.create') }}" class="btn btn-primary">Tambah Pengembalian</a>
 
     <table class="table table-bordered table-striped table-hover table-primary align-middle text-center mt-3">
@@ -47,14 +48,16 @@
 
                         <div class="dropdown-menu">
                             <a href="{{ route('pengembalian.edit', $item->id) }}" class="dropdown-item text-dark">Edit</a>
-                            <form action="{{ route('pengembalian.acc', $item->id) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" name="status_pengembalian" value="Diterima" 
-                                class="dropdown-item text-success bg-transparent border-0">Setujui</button>
-                                <button type="submit" name="status_pengembalian" value="ditolak" 
-                                class="dropdown-item text-danger bg-transparent border-0">Tolak</button>
-                            </form>
+                            @if (auth()->user()->role == 'A') 
+                                <form action="{{ route('pengembalian.acc', $item->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" name="status_pengembalian" value="Diterima" 
+                                    class="dropdown-item text-success bg-transparent border-0">Setujui</button>
+                                    <button type="submit" name="status_pengembalian" value="ditolak" 
+                                    class="dropdown-item text-danger bg-transparent border-0">Tolak</button>
+                                </form>
+                            @endif
                         </div>
                     </td>
                 </tr>

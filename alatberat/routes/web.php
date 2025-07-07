@@ -31,23 +31,32 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Route::middleware(['auth', 'role:A,U'])->group(function () {
-//     Route::get('/alat', [AlatController::class, 'index'])->name('alat.index');
-//     Route::get('/alat/create', [AlatController::class, 'create'])->name('alat.create');
-//     Route::post('/alat/store', [AlatController::class, 'store'])->name('alat.store');
-//     Route::get('/alat/{id}/edit', [AlatController::class, 'edit'])->name('alat.edit');
-//     Route::put('/alat/{id}/update', [AlatController::class, 'update'])->name('alat.update');
-// });
+Route::middleware(['auth', 'role:A,U'])->group(function () {
+    Route::get('/alat', [AlatController::class, 'index'])->name('alat.index');
+    
+});
 
 
-// Route::middleware(['auth', 'role:A'])->group(function () {
-//     Route::get('/alat', [AlatController::class, 'index'])->name('alat.index');
-//     Route::get("/alat/create", [AlatController::class, 'create'])->name('alat.create');
-//     Route::post("/alat/store", [AlatController::class, 'store'])->name('alat.store');
-//     Route::get("/alat/{id}/edit", [AlatController::class, 'edit'])->name('alat.edit');
-//     Route::put("/alat/{id}/update", [AlatController::class, 'update'])->name('alat.update');
-// });
-Route::resource('alat', AlatController::class);
+Route::middleware(['auth', 'role:A'])->group(function () {
+    Route::get("/alat/create", [AlatController::class, 'create'])->name('alat.create');
+    Route::post("/alat/store", [AlatController::class, 'store'])->name('alat.store');
+    Route::get("/alat/{id}/edit", [AlatController::class, 'edit'])->name('alat.edit');
+    Route::put("/alat/{id}/update", [AlatController::class, 'update'])->name('alast.update');
+});
+
+Route::middleware(['auth', 'role:A,U'])->group(function () {
+    Route::get('/peminjaman', [AlatController::class, 'index'])->name('alat.index');
+    
+});
+
+Route::middleware(['auth', 'role:A'])->group(function () {
+    Route::get("/peminjaman/create", [PeminjamanController::class, 'create'])->name('peminjaman.create');
+    Route::post("/peminjaman/store", [PeminjamanController::class, 'store'])->name('peminjaman.store');
+    Route::get("/peminjaman/{id}/edit", [PeminjamanController::class, 'edit'])->name('peminjaman.edit');
+    Route::put("/peminjaman/{id}/update", [PeminjamanController::class, 'update'])->name('peminjaman.update');          
+});
+
+// Route::resource('alat', AlatController::class);
 Route::resource('peminjaman', PeminjamanController::class);
 Route::put('peminjaman/{id}/acc', [PeminjamanController::class, 'acc'])->name('peminjaman.acc');
 Route::resource('pengembalian', PengembalianController::class);

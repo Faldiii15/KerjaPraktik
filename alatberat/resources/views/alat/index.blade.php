@@ -51,10 +51,10 @@
                                     </li>
                                 </ul>
                                 @if (auth()->user()->role == 'A') 
-                                @endif
                                 <a href="{{ route('alat.edit', $item->id) }}" class="btn btn-warning w-100 mt-3">
                                     <i class="fa fa-edit me-1"></i> Edit
                                 </a>
+                                @endif
                             </div>
                         </div>
                     </div>

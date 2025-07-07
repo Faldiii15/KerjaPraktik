@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="h3">Peminjaman Alat Berat</h1>
-            <a href="{{ route('peminjaman.create') }}" class="btn btn-primary">Tambah Peminjaman</a>
+                <a href="{{ route('peminjaman.create') }}" class="btn btn-primary">Tambah Peminjaman</a>
             <table class="table table-bordered table-striped table-hover table-primary align-middle text-center mt-3">
                 <thead class="table-primary">
                     <tr class="text-center">
@@ -48,22 +48,24 @@
                                 @endif
                             </td>
                             <td class="dropdown text-center">
-                                <button type="button" class="btn p-0 hide-arrow" data-bs-toggle="dropdown">
-                                    <i class="bi bi-three-dots-vertical fs-5"></i>
-                                </button>
+                                    <button type="button" class="btn p-0 hide-arrow" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots-vertical fs-5"></i>
+                                    </button>
 
-                                <div class="dropdown-menu">
-                                    <a href="{{ route('peminjaman.edit', $item->id) }}" class="dropdown-item text-dark">Edit</a>
-                                    <form action="{{ route('peminjaman.acc', $item->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" name="status_peminjaman" value="Disetujui" 
-                                        class="dropdown-item text-success bg-transparent border-0">Setujui</button>
-                                        <button type="submit" name="status_peminjaman" value="ditolak" 
-                                        class="dropdown-item text-danger bg-transparent border-0">Tolak</button>
-                                    </form>
-                                </div>
-                            </td>
+                                    <div class="dropdown-menu">
+                                        <a href="{{ route('peminjaman.edit', $item->id) }}" class="dropdown-item text-dark">Edit</a>
+                                        @if (auth()->user()->role == 'A') 
+                                            <form action="{{ route('peminjaman.acc', $item->id) }}" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="submit" name="status_peminjaman" value="Disetujui" 
+                                                class="dropdown-item text-success bg-transparent border-0">Setujui</button>
+                                                <button type="submit" name="status_peminjaman" value="ditolak" 
+                                                class="dropdown-item text-danger bg-transparent border-0">Tolak</button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                </td>
                         </tr>
                     @empty
                         <tr>

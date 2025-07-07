@@ -1,3 +1,4 @@
+@if (auth()->user()->role == 'A') 
 @extends('layouts.main')
 @section('title', 'Pemeliharaan Alat Berat')
 
@@ -6,7 +7,9 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="h3">Pemeliharaan Alat Berat</h1>
-            <a href="{{ route('pemeliharaan.create') }}" class="btn btn-primary">Tambah Pemeliharaan</a>
+  
+                <a href="{{ route('pemeliharaan.create') }}" class="btn btn-primary">Tambah Pemeliharaan</a>
+
             <table class="table table-bordered table-striped table-hover table-primary align-middle text-center mt-3">
                 <thead class="table-primary">
                     <tr class="text-center">
@@ -59,3 +62,4 @@
     </div>
 </div>
 @endsection
+@endif
