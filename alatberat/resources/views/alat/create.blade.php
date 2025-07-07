@@ -12,7 +12,7 @@
 
                 <div class="form-group mt-3">
                     <label for="kode_alat">Kode Alat</label>
-                    <input type="text" class="form-control" id="kode_alat" name="kode_alat" maxlength="10" required>
+                    <input type="text" class="form-control" id="kode_alat" name="kode_alat" maxlength="10"  required>
                     @error('kode_alat')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>
                     @enderror

@@ -21,35 +21,24 @@
                     @error('alat_id')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>  
                     @enderror
-                </div>
+                </div>  
                 <div class="form-group mt-3">
                     <label for="nama_pt">Nama PT</label>
-                    <select name="nama_pt" id="nama_pt" class="form-control" required>
-                        <option value="">Pilih Nama PT</option>
-                        <option value="PT Arina Jaya Bersama" {{ old('nama_pt') == 'PT Arina Jaya Bersama' ? 'selected' : '' }}>
-                            PT Arina Jaya Bersama
-                        </option>
-                        <option value="PT Suma Java Berjaya" {{ old('nama_pt') == 'PT Suma Java Berjaya' ? 'selected' : '' }}>
-                            PT Suma Java Berjaya
-                        </option>
-                        <option value="PT Putra Kayu Agung" {{ old('nama_pt') == 'PT Putra Kayu Agung' ? 'selected' : '' }}>
-                            PT Putra Kayu Agung
-                        </option>
-                    </select>
+                    <input type="text" name="nama_pt" id="nama_pt" class="form-control" value="{{ $anggota->nama_pt }}" readonly>
                     @error('nama_pt')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>  
                     @enderror
                 </div>
                 <div class="form-group mt-3">
                     <label for="nama_peminjam">Nama Peminjam</label>
-                    <input type="text" name="nama_peminjam" id="nama_peminjam" class="form-control" placeholder="Masukkan Nama Peminjam" required>
+                    <input type="text" name="nama_peminjam" id="nama_peminjam" class="form-control" value="{{ $anggota->nama }}" readonly>
                     @error('nama_peminjam')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>  
                     @enderror
                 </div>
                 <div class="form-group mt-3">
                     <label for="alamat">Alamat</label>
-                    <input type="text" name="alamat" id="alamat" class="form-control" placeholder="Masukkan Alamat" required>
+                    <input type="text" name="alamat" id="alamat" class="form-control" value="{{ $anggota->alamat }}" readonly>
                     @error('alamat')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>  
                     @enderror
@@ -78,6 +67,11 @@
                         <div class="alert alert-danger mt-2">{{ $message }}</div>  
                     @enderror
                 </div>
+
+                <input type="hidden" name="anggota_id" value="{{ $anggota->id }}">
+                <input type="hidden" name="nama_pt" value="{{ $anggota->nama_pt }}">
+                <input type="hidden" name="nama_peminjam" value="{{ $anggota->nama }}">
+                <input type="hidden" name="alamat" value="{{ $anggota->alamat }}">
                 
                 <button type="submit" class="btn btn-primary mt-4">Simpan</button>
                 <a href="{{ route('peminjaman.index') }}" class="btn btn-secondary mt-4">Batal</a>

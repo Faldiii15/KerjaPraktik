@@ -24,11 +24,11 @@
                 <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
                   <img src="./assets/images/logos/logo.svg" alt="">
                 </a>
-                <p class="text-center">Your Social Campaigns</p>
+                <p class="text-center">Selamat Datang</p>
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                   <div class="mb-3">
-                    <label for="email" class="form-label">Username</label>
+                    <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
                   </div>
                   <div class="mb-4">
@@ -37,7 +37,7 @@
                   </div>
                   <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</button>
                   <div class="d-flex align-items-center justify-content-center">
-                    <a class="text-primary fw-bold ms-2" href="{{ route('register') }}">Create an account</a>
+                    <a class="text-primary fw-bold ms-2" href="{{ route('register') }}">Buat akun</a>
                   </div>
                 </form>
               </div>

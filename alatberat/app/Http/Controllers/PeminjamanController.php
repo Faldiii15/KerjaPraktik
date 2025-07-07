@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Alat;
+use App\Models\Anggota;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
+
+
+
 
 class PeminjamanController extends Controller
 {
@@ -23,7 +28,10 @@ class PeminjamanController extends Controller
     public function create()
     {
         $alat = Alat::where('status', 'tersedia')->get();
-        return view('peminjaman.create')->with('alat', $alat);
+        $anggota = Anggota::where('email', Auth::user()->email)->first();
+        return view('peminjaman.create')
+        ->with('alat', $alat)
+        ->with('anggota', $anggota);
     }
     /**
      * Store a newly created resource in storage.
@@ -32,6 +40,7 @@ class PeminjamanController extends Controller
     {
         $val = $request->validate([
             'alat_id' => 'required|exists:alats,id',
+            'anggota_id' => 'required|exists:anggotas,id',
             'nama_pt' => 'required|string|max:225',
             'nama_peminjam' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
@@ -112,7 +121,10 @@ class PeminjamanController extends Controller
     {
         $validatedData = $request->validate([
             'alat_id' => 'required|exists:alats,id',
+            'anggota_id' => 'required|exists:anggotas,id',
+            'nama_pt' => 'required|string|max:225',
             'nama_peminjam' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
             'tanggal_pinjam' => 'required|date',
             'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
             'keperluan' => 'required|string|max:255',

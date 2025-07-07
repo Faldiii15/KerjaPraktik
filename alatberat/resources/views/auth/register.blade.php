@@ -24,7 +24,7 @@
                 <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
                   <img src="./assets/images/logos/logo.svg" alt="">
                 </a>
-                <p class="text-center">Your Social Campaigns</p>
+                <p class="text-center">Silahkan Sign Up</p>
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
                   <div class="mb-3">

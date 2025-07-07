@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('peminjamen', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('anggota_id')->constrained('anggotas')->onDelete('cascade');
             $table->foreignUuid('alat_id')->constrained('alats')->onDelete('cascade');
             $table->string('nama_pt');
             $table->string('nama_peminjam');

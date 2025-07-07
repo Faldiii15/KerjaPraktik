@@ -14,6 +14,7 @@ class Peminjaman extends Model
 
     protected $fillable = [
         'alat_id',
+        'anggota_id',
         'nama_pt',
         'nama_peminjam',
         'alamat',
@@ -34,6 +35,11 @@ class Peminjaman extends Model
         });
     }
 
+    public function anggota()
+    {
+        return $this->belongsTo(Anggota::class, 'anggota_id', 'id');
+    }
+
     public function alat()
     {
         return $this->belongsTo(Alat::class, 'alat_id', 'id');
@@ -42,5 +48,4 @@ class Peminjaman extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
 }
