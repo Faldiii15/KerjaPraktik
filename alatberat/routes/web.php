@@ -21,15 +21,10 @@ use App\Models\Pengembalian;
 Route::get('/dashboard', [DashboardController::class, 
     'index'])->middleware('auth', 'verified')->name('dashboard');
 
-
-
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -37,7 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'role:A,U,P'])->group(function () {
+Route::middleware(['auth', 'role:A,U'])->group(function () {
     Route::get('/alat', [AlatController::class, 'index'])->name('alat.index');
     
 });
@@ -45,8 +40,8 @@ Route::middleware(['auth', 'role:A,U,P'])->group(function () {
 Route::middleware(['auth', 'role:A'])->group(function () {
     Route::get("/alat/create", [AlatController::class, 'create'])->name('alat.create');
     Route::post("/alat/store", [AlatController::class, 'store'])->name('alat.store');
-    Route::get("/alat/{id}/edit", [AlatController::class, 'edit'])->name('alat.edit');
-    Route::put("/alat/{id}/update", [AlatController::class, 'update'])->name('alat.update');
+    Route::get("/alat/{alat}/edit", [AlatController::class, 'edit'])->name('alat.edit');
+    Route::put("/alat/{alat}/update", [AlatController::class, 'update'])->name('alat.update');
 });
 
 Route::middleware(['auth', 'role:A,U'])->group(function () {
@@ -54,7 +49,7 @@ Route::middleware(['auth', 'role:A,U'])->group(function () {
     
 });
 
-Route::middleware(['auth', 'role:U'])->group(function () {
+Route::middleware(['auth', 'role:A,U'])->group(function () {
     Route::get("/anggota/create", [AnggotaController::class, 'create'])->name('anggota.create');
     Route::post("/anggota/store", [AnggotaController::class, 'store'])->name('anggota.store');
     Route::get('/anggota/{anggota}/edit', [AnggotaController::class, 'edit'])->name('anggota.edit');
@@ -102,10 +97,10 @@ Route::middleware(['auth', 'role:A'])->group(function () {
 });
 
 
-Route::middleware(['auth', 'role:A,P'])->group(function () {
+Route::middleware(['auth', 'role:A'])->group(function () {
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
 });
-Route::middleware(['auth', 'role:A,'])->group(function () {
+Route::middleware(['auth', 'role:A'])->group(function () {
     Route::get('laporan/alat', [LaporanController::class, 'laporanAlat'])->name('laporan.alat');
     Route::get('/laporan/alat/pdf', [LaporanController::class, 'exportAlat'])->name('laporan.alat.pdf');
     Route::get('/laporan/peminjaman', [LaporanController::class, 'laporanPeminjaman'])->name('laporan.peminjaman');
