@@ -7,7 +7,9 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="h3">Daftar Pengembalian Alat Berat</h1>
-                <a href="{{ route('pengembalian.create') }}" class="btn btn-primary">Tambah Pengembalian</a>
+            @if (auth()->user()->role == 'U')    
+            <a href="{{ route('pengembalian.create') }}" class="btn btn-primary">Tambah Pengembalian</a>
+            @endif
             <table class="table table-bordered table-striped table-hover table-primary align-middle text-center mt-3">
                 <thead class="table-primary">
                     <tr class="text-center">

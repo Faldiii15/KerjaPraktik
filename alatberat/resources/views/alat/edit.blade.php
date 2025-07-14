@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1>Edit Alat Berat</h1>
-            <form action="{{ route('alat.update', $alat['id']) }}" method="POST">
+            <form action="{{ route('alat.update', $alat['id']) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="form-group mt-3">
@@ -45,17 +45,22 @@
                         <div class="alert alert-danger mt-2">{{ $message }}</div>
                     @enderror
                 </div>
-                {{-- <div class="form-group mt-3">
-                    <label for="status">Status</label>
-                    <select class="form-control" id="status" name="status" required>
-                        <option value="tersedia" {{ old('status', $alat['status']) == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
-                        <option value="rusak" {{ old('status', $alat['status']) == 'rusak' ? 'selected' : '' }}>Rusak</option>
-                        <option value="dipinjam" {{ old('status', $alat['status']) == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
-                    </select>
-                    @error('status')
+                <div class="form-group mt-3">
+                    <label for="foto">Foto Alat</label><br>
+                    
+                    {{-- Tampilkan Gambar --}}
+                    <img src="{{ asset('fotoalat/' . $alat['foto']) }}" alt="Foto Alat" width="150" class="mb-2"><br>
+
+                    {{-- Tampilkan Nama File --}}
+                    <p><strong>File saat ini:</strong> {{ $alat['foto'] }}</p>
+
+                    {{-- Input File --}}
+                    <input type="file" class="form-control" name="foto" accept="image/*">
+                    @error('foto')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>
                     @enderror
-                </div> --}}
+                </div>
+
                 <div class="mt-3">
                     <button type="submit" class="btn btn-primary">Simpan</button>
                     <a href="{{ route('alat.index') }}" class="btn btn-transparant">Batal</a>

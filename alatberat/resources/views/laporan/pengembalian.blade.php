@@ -9,7 +9,7 @@
     </a>
 
     <div class="table-responsive">
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped text-center">
             <thead>
                 <tr>
                     <th>No</th>
@@ -34,7 +34,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center">Tidak ada data pengembalian.</td>
+                        <td colspan="8" class="text-center">Tidak ada data pengembalian.</td>
                     </tr>
                 @endforelse
             </tbody>

@@ -22,28 +22,36 @@
                         <div class="alert alert-danger mt-2">{{ $message }}</div>  
                     @enderror
                 </div>  
+                <!-- Nama PT -->
                 <div class="form-group mt-3">
                     <label for="nama_pt">Nama PT</label>
-                    <input type="text" name="nama_pt" id="nama_pt" class="form-control" value="{{ $anggota->nama_pt }}" readonly>
+                    <input type="text" class="form-control" value="{{ $anggota->nama_pt ?? '' }}" readonly>
+                    <input type="hidden" name="nama_pt" value="{{ $anggota->nama_pt ?? '' }}">
                     @error('nama_pt')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>  
                     @enderror
                 </div>
+
+                <!-- Nama Peminjam -->
                 <div class="form-group mt-3">
                     <label for="nama_peminjam">Nama Peminjam</label>
-                    <input type="text" name="nama_peminjam" id="nama_peminjam" class="form-control" value="{{ $anggota->nama }}" readonly>
+                    <input type="text" class="form-control" value="{{ $anggota->user->name ?? '' }}" readonly>
+                    <input type="hidden" name="nama_peminjam" value="{{ $anggota->user->name ?? '' }}">
                     @error('nama_peminjam')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>  
                     @enderror
                 </div>
+
+                <!-- Alamat -->
                 <div class="form-group mt-3">
                     <label for="alamat">Alamat</label>
-                    <input type="text" name="alamat" id="alamat" class="form-control" value="{{ $anggota->alamat }}" readonly>
+                    <input type="text" class="form-control" value="{{ $anggota->alamat_pt ?? '' }}" readonly>
+                    <input type="hidden" name="alamat" value="{{ $anggota->alamat_pt ?? '' }}">
                     @error('alamat')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>  
                     @enderror
                 </div>
-               
+
                 <div class="form-group mt-3">
                     <label for="tanggal_pinjam">Tanggal Pinjam</label>
                     <input type="date" class="form-control" id="tanggal_pinjam" name="tanggal_pinjam" required>
@@ -69,9 +77,6 @@
                 </div>
 
                 <input type="hidden" name="anggota_id" value="{{ $anggota->id }}">
-                <input type="hidden" name="nama_pt" value="{{ $anggota->nama_pt }}">
-                <input type="hidden" name="nama_peminjam" value="{{ $anggota->nama }}">
-                <input type="hidden" name="alamat" value="{{ $anggota->alamat }}">
                 
                 <button type="submit" class="btn btn-primary mt-4">Simpan</button>
                 <a href="{{ route('peminjaman.index') }}" class="btn btn-secondary mt-4">Batal</a>

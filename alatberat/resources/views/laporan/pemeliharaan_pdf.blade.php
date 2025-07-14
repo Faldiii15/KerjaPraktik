@@ -22,6 +22,7 @@
             <tr>
                 <th>No</th>
                 <th>Alat</th>
+                <th>Teknisi</th>
                 <th>Tanggal</th>
                 <th>Deskripsi</th>
                 <th>Status</th>
@@ -32,6 +33,7 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $item->alat->nama ?? '-' }}</td>
+                <td>{{ $item->teknisi}}</td>
                 <td>{{ $item->tanggal}}</td>
                 <td>{{ $item->deskripsi }}</td>
                 <td>{{ ucfirst($item->status) }}</td>

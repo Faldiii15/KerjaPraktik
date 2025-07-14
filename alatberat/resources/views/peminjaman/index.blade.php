@@ -7,7 +7,16 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="h3">Peminjaman Alat Berat</h1>
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- | auth()->user()->role == 'A' --}}
+            @if (auth()->user()->role == 'U')     
                 <a href="{{ route('peminjaman.create') }}" class="btn btn-primary">Tambah Peminjaman</a>
+            @endif
             <table class="table table-bordered table-striped table-hover table-primary align-middle text-center mt-3">
                 <thead class="table-primary">
                     <tr class="text-center">
@@ -29,7 +38,7 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $item->alat->nama ?? '-' }}</td>
                             <td>{{ $item->nama_pt ?? '-' }}</td>
-                            <td>{{ $item->nama_peminjam ?? '-' }}</td>
+                            <td>{{ $item->anggota->user->name ?? '-' }}</td>
                             <td>{{ $item->alamat ?? '-' }}</td>
                             <td>{{ $item->tanggal_pinjam }}</td>
                             <td>{{ $item->tanggal_kembali }}</td>

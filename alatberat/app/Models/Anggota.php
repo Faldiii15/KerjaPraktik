@@ -15,12 +15,10 @@ class Anggota extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id',
+        'user_id',
         'nama_pt',
-        'nama',
-        'email',
         'no_hp',
-        'alamat',
+        'alamat_pt',
     ];
 
     protected static function boot()
@@ -31,6 +29,9 @@ class Anggota extends Model
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
         });
+    }
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 }
 

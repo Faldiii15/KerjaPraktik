@@ -7,54 +7,37 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use App\Models\Anggota;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): View
+    public function index()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
-    }
-
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
+        $user = Auth::user();
+        $anggota = Anggota::firstOrCreate([
+            'user_id' => $user->id
         ]);
 
-        $user = $request->user();
+        return view('profile.index', compact('user', 'anggota'));
+    }
 
-        Auth::logout();
+    public function update(Request $request)
+    {
+        $request->validate([
+            'nama_pt' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:20',
+            'alamat_pt' => 'required|string',
+        ]);
 
-        $user->delete();
+        Anggota::updateOrCreate(
+            ['user_id' => Auth::id()],
+            [
+                'nama_pt' => $request->nama_pt,
+                'no_hp' => $request->no_hp,
+                'alamat_pt' => $request->alamat_pt,
+            ]
+        );
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return redirect()->route('profile.index')->with('success', 'Profil berhasil diperbarui.');
     }
 }

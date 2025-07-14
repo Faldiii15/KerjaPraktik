@@ -9,12 +9,12 @@
     </a>
 
     <div class="table-responsive">
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped text-center">
             <thead>
                 <tr>
                     <th>No</th>
                     <th>Nama Peminjam</th>
-                    <th>Perusahaan</th>
+                    <th>Nama PT</th>
                     <th>Nama Alat</th>
                     <th>Tanggal Pinjam</th>
                     <th>Tanggal Kembali</th>

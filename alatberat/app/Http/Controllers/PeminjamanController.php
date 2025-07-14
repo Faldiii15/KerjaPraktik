@@ -18,7 +18,7 @@ class PeminjamanController extends Controller
      */
     public function index()
     {
-        $peminjaman = Peminjaman::with('alat')->get();
+        $peminjaman = Peminjaman::with(['alat', 'anggota.user'])->get();
         return view('peminjaman.index')->with('peminjaman', $peminjaman);
     }
 
@@ -27,8 +27,9 @@ class PeminjamanController extends Controller
      */
     public function create()
     {
+
         $alat = Alat::where('status', 'tersedia')->get();
-        $anggota = Anggota::where('email', Auth::user()->email)->first();
+        $anggota = Anggota::where('user_id', Auth::id())->first();
         return view('peminjaman.create')
         ->with('alat', $alat)
         ->with('anggota', $anggota);

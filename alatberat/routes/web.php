@@ -18,18 +18,21 @@ use App\Models\Pemeliharaan;
 use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 
-Route::get('/dashboard', [DashboardController::class, 
-    'index'])->middleware('auth', 'verified')->name('dashboard');
+Route::middleware(['auth', 'role:A'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Route::middleware('auth')->group(function () {
+// Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
+// });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::middleware(['auth', 'role:A,U'])->group(function () {
@@ -44,17 +47,17 @@ Route::middleware(['auth', 'role:A'])->group(function () {
     Route::put("/alat/{alat}/update", [AlatController::class, 'update'])->name('alat.update');
 });
 
-Route::middleware(['auth', 'role:A,U'])->group(function () {
-    Route::get('/anggota', [AnggotaController::class, 'index'])->name('anggota.index');
+// Route::middleware(['auth', 'role:A,U'])->group(function () {
+//     Route::get('/anggota', [AnggotaController::class, 'index'])->name('anggota.index');
     
-});
+// });
 
-Route::middleware(['auth', 'role:A,U'])->group(function () {
-    Route::get("/anggota/create", [AnggotaController::class, 'create'])->name('anggota.create');
-    Route::post("/anggota/store", [AnggotaController::class, 'store'])->name('anggota.store');
-    Route::get('/anggota/{anggota}/edit', [AnggotaController::class, 'edit'])->name('anggota.edit');
-    Route::put('/anggota/{anggota}/update', [AnggotaController::class, 'update'])->name('anggota.update');
-});
+// Route::middleware(['auth', 'role:A,U'])->group(function () {
+//     Route::get("/anggota/create", [AnggotaController::class, 'create'])->name('anggota.create');
+//     Route::post("/anggota/store", [AnggotaController::class, 'store'])->name('anggota.store');
+//     Route::get('/anggota/{anggota}/edit', [AnggotaController::class, 'edit'])->name('anggota.edit');
+//     Route::put('/anggota/{anggota}/update', [AnggotaController::class, 'update'])->name('anggota.update');
+// });
 
 
 

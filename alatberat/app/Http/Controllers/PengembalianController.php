@@ -128,6 +128,22 @@ class PengembalianController extends Controller
             'catatan' => 'nullable|string|max:255',
         ]);
 
+        $peminjaman = Peminjaman::findOrFail($val['peminjaman_id']);
+
+        if ($peminjaman->status_peminjaman !== 'Disetujui') {
+            return back()->withErrors(['peminjaman_id' => 'Peminjaman tidak valid.'])->withInput();
+        }
+
+        // Validasi tanggal pengembalian tidak boleh terlalu cepat atau terlalu lambat
+        if ($val['tanggal_kembali'] < $peminjaman->tanggal_pinjam) {
+            return back()->withErrors(['tanggal_kembali' => 'Tanggal pengembalian tidak boleh sebelum tanggal pinjam.'])->withInput();
+        }
+
+        if ($val['tanggal_kembali'] > $peminjaman->tanggal_kembali) {
+            return back()->withErrors(['tanggal_kembali' => 'Tanggal pengembalian melebihi batas waktu.'])->withInput();
+        }
+
+        $val['status_pengembalian'] = 'pending';
         $pengembalian->update($val);
 
         return redirect()->route('pengembalian.index')->with('success', 'Pengembalian berhasil diperbarui.');

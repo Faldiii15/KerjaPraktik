@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,21 +43,21 @@
 
 
         <!-- Sidebar Start -->
-        <div class="sidebar pe-4 pb-3">
+        <div class="sidebar pe-4 pb-3 ">
             <nav class="navbar bg-light navbar-light">
                 <a href="#" class="navbar-brand mx-4 mb-3">
                     <h3 class="text-primary"><i class="fa fa-tools me-2"></i>MyJAK</h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
-                    <div class="position-relative">
-                        {{-- <img class="rounded-circle" class="fa fa-user" alt="" style="width: 40px; height: 40px;"> --}}
-                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
-                    </div>
+                   
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="{{ route('dashboard') }}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    @if (auth()->user()->role === 'A')
+                        <a href="{{ route('dashboard') }}" class="nav-item nav-link active">
+                            <i class="fa fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                    @endif
                     <a href="{{ url('alat') }}" class="nav-item nav-link"><i class="fa fa-tractor me-2"></i> Alat Berat</a>
-                    <a href="{{ url('anggota') }}" class="nav-item nav-link"><i class="fa fa-user"></i> Anggota</a>
                     <a href="{{ url('peminjaman') }}" class="nav-item nav-link"><i class="fa fa-industry me-2"></i>Peminjaman Alat</a>
                     <a href="{{ url('pengembalian') }}" class="nav-item nav-link"><i class="fa fa-truck"></i>Pengembalian Alat</a>
                     @if (auth()->user()->role == 'A') 
@@ -99,21 +98,21 @@
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
-                {{-- <form class="d-none d-md-flex ms-4">
-                    <input class="form-control border-0" type="search" placeholder="Search">
-                </form> --}}
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <span class="d-none d-lg-inline-flex fa fa-user">{{ Auth::user()->name }}</span>
+                            <span class="d-none d-lg-inline-flex align-items-center">
+                               <i class="fa fa-user me-2"></i> {{ Auth::user()->name }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            {{-- <a href="#" class="dropdown-item">My Profile</a>
-                            <a href="#" class="dropdown-item">Settings</a> --}}
-                            {{-- <a href="{{ url("logout") }}" class="dropdown-item">Log Out</a> --}}
                             <li>
+                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ route('profile.index') }}">
+                                    <i class="bi bi-person-circle me-2"></i>
+                                    <span class="align-middle">Profile</span>
+                                </a>
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <i class="bx bx-power-off me-2"></i>
+                                    <i class="fas fa-sign-out-alt me-2""></i>
                                     <span class="align-middle">Log Out</span>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf

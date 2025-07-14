@@ -1,9 +1,32 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="container">
-    <h2>Dashboard</h2>
-    <canvas id="dashboardChart" width="400" height="200"></canvas>
+<div class="container text-center my-4">
+    <h2 class="text-primary fw-bold">{{ $profil['nama_pt'] }}</h2>
+    <div class="row mt-4">
+        <div class="col-md-6 text-start">
+            <h4 class="fw-bold">Visi</h4>
+            <ul>
+                @foreach ($profil['visi'] as $visi)
+                    <li style="text-align: justify">{{ $visi }}</li>
+                @endforeach
+            </ul>
+        </div>
+        <div class="col-md-6 text-start">
+            <h4 class="fw-bold">Misi</h4>
+            <ul>
+                @foreach ($profil['misi'] as $misi)
+                    <li style="text-align: justify">{{ $misi }}</li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+    <hr>
+</div>
+
+<div class="container mb-5">
+    <h3 class="text-center fw-bold mb-3">Grafik Total Laporan</h3>
+    <canvas id="dashboardChart" width="400" height="180" class="mb-4"></canvas>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
