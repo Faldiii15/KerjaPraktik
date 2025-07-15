@@ -69,7 +69,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="alamat_pt" class="form-label">Alamat PT</label>
+                <label for="alamat_pt" class="form-label">Lokasi PT</label>
                 <textarea name="alamat_pt" class="form-control @error('alamat_pt') is-invalid @enderror">{{ old('alamat_pt', $anggota->alamat_pt) }}</textarea>
                 @error('alamat_pt')
                     <div class="invalid-feedback">{{ $message }}</div>

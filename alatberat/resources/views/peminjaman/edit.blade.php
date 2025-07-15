@@ -35,7 +35,7 @@
                     value="{{ old('nama_peminjam', $peminjaman->nama_peminjam) }}" required>
                 </div>
                 <div class="form-group mt-3">
-                    <label for="alamat">Alamat</label>
+                    <label for="alamat">Lokasi PT</label>
                     <input type="text" name="alamat" id="alamat" class="form-control" 
                     value="{{ old('alamat', $peminjaman->alamat) }}" required>
                 </div>

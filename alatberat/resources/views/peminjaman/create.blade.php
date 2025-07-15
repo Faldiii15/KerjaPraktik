@@ -44,7 +44,7 @@
 
                 <!-- Alamat -->
                 <div class="form-group mt-3">
-                    <label for="alamat">Alamat</label>
+                    <label for="alamat">Lokasi PT</label>
                     <input type="text" class="form-control" value="{{ $anggota->alamat_pt ?? '' }}" readonly>
                     <input type="hidden" name="alamat" value="{{ $anggota->alamat_pt ?? '' }}">
                     @error('alamat')

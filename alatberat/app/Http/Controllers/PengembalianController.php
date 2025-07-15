@@ -2,33 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use Illuminate\Http\Request;
+use App\Models\Anggota;
 
 class PengembalianController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $pengembalian = Pengembalian::with('peminjaman.alat')->get();
+        $user = Auth::user();
+
+        // Admin dan Kepala PT bisa melihat semua
+        if (in_array($user->role, ['A', 'K'])) {
+            $pengembalian = Pengembalian::with(['peminjaman.alat', 'peminjaman.anggota'])
+            ->join('peminjamen', 'pengembalians.peminjaman_id', '=', 'peminjamen.id')
+            ->join('anggotas', 'peminjamen.anggota_id', '=', 'anggotas.id')
+            ->orderBy('anggotas.nama_pt', 'asc')
+            ->orderBy('peminjamen.tanggal_pinjam', 'asc')
+            ->select('pengembalians.*')
+            ->get();
+        } else {
+            // User hanya bisa melihat miliknya
+            $anggota = Anggota::where('user_id', $user->id)->first();
+
+            $pengembalian = Pengembalian::with('peminjaman.alat')
+                ->whereHas('peminjaman', function ($query) use ($anggota) {
+                    $query->where('anggota_id', $anggota->id);
+                })->get();
+        }
+
         return view('pengembalian.index')->with('pengembalian', $pengembalian);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $peminjaman = Peminjaman::where('status_peminjaman', 'Disetujui')->get();
+        $anggota = Anggota::where('user_id', Auth::id())->first();
+
+        $peminjaman = Peminjaman::where('status_peminjaman', 'Disetujui')
+            ->where('anggota_id', $anggota->id)
+            ->get();
+
         return view('pengembalian.create')->with('peminjaman', $peminjaman);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $val = $request->validate([
@@ -39,12 +57,16 @@ class PengembalianController extends Controller
         ]);
 
         $peminjaman = Peminjaman::findOrFail($val['peminjaman_id']);
+        $anggota = Anggota::where('user_id', Auth::id())->first();
+
+        if ($peminjaman->anggota_id !== $anggota->id) {
+            abort(403, 'Anda tidak berhak melakukan pengembalian ini.');
+        }
 
         if ($peminjaman->status_peminjaman !== 'Disetujui') {
             return back()->withErrors(['peminjaman_id' => 'Peminjaman tidak valid.'])->withInput();
         }
 
-        // Validasi tanggal pengembalian tidak boleh terlalu cepat atau terlalu lambat
         if ($val['tanggal_kembali'] < $peminjaman->tanggal_pinjam) {
             return back()->withErrors(['tanggal_kembali' => 'Tanggal pengembalian tidak boleh sebelum tanggal pinjam.'])->withInput();
         }
@@ -61,10 +83,16 @@ class PengembalianController extends Controller
 
     public function acc(Request $request, $id)
     {
+        $user = Auth::user();
+
+        // Hanya Admin atau Kepala PT yang boleh acc
+        if (!in_array($user->role, ['A', 'K'])) {
+            abort(403, 'Anda tidak memiliki hak untuk menyetujui pengembalian.');
+        }
+
         $pengembalian = Pengembalian::findOrFail($id);
         $status = $request->input('status_pengembalian');
 
-        // Validasi status
         if (!in_array($status, ['Diterima', 'ditolak'])) {
             return back()->withErrors(['status_pengembalian' => 'Status tidak valid.']);
         }
@@ -72,53 +100,38 @@ class PengembalianController extends Controller
         $pengembalian->status_pengembalian = $status;
         $pengembalian->save();
 
-        // Jika disetujui, ubah status alat menjadi dipinjam
         $peminjaman = $pengembalian->peminjaman;
         $alat = $peminjaman->alat;
 
         if ($status === 'Diterima') {
             $peminjaman->status_peminjaman = 'dikembalikan';
-            
-            if ($peminjaman->alat) {
-            $peminjaman->alat->status = 'tersedia';
-            $peminjaman->alat->save();
-        }
-
+            if ($alat) {
+                $alat->status = 'tersedia';
+                $alat->save();
+            }
         } elseif ($status === 'ditolak') {
             $peminjaman->status_peminjaman = 'Disetujui';
-
             if ($alat) {
-            $alat->status = 'dipinjam';
-            $alat->save();
-        }
+                $alat->status = 'dipinjam';
+                $alat->save();
+            }
         }
 
         $peminjaman->save();
+
         return redirect()->route('pengembalian.index')->with('success', 'Status pengembalian berhasil diperbarui.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Pengembalian $pengembalian)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Pengembalian $pengembalian)
     {
-        $peminjaman = Peminjaman::where('status_peminjaman', 'Disetujui')->get();
+        $anggota = Anggota::where('user_id', Auth::id())->first();
+        $peminjaman = Peminjaman::where('status_peminjaman', 'Disetujui')
+            ->where('anggota_id', $anggota->id)
+            ->get();
+
         return view('pengembalian.edit', compact('pengembalian', 'peminjaman'));
     }
 
-    
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Pengembalian $pengembalian)
     {
         $val = $request->validate([
@@ -129,12 +142,12 @@ class PengembalianController extends Controller
         ]);
 
         $peminjaman = Peminjaman::findOrFail($val['peminjaman_id']);
+        $anggota = Anggota::where('user_id', Auth::id())->first();
 
-        if ($peminjaman->status_peminjaman !== 'Disetujui') {
-            return back()->withErrors(['peminjaman_id' => 'Peminjaman tidak valid.'])->withInput();
+        if ($peminjaman->anggota_id !== $anggota->id) {
+            abort(403, 'Anda tidak berhak memperbarui data ini.');
         }
 
-        // Validasi tanggal pengembalian tidak boleh terlalu cepat atau terlalu lambat
         if ($val['tanggal_kembali'] < $peminjaman->tanggal_pinjam) {
             return back()->withErrors(['tanggal_kembali' => 'Tanggal pengembalian tidak boleh sebelum tanggal pinjam.'])->withInput();
         }
@@ -147,12 +160,13 @@ class PengembalianController extends Controller
         $pengembalian->update($val);
 
         return redirect()->route('pengembalian.index')->with('success', 'Pengembalian berhasil diperbarui.');
-        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function show(Pengembalian $pengembalian)
+    {
+        //
+    }
+
     public function destroy(Pengembalian $pengembalian)
     {
         //

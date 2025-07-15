@@ -57,7 +57,7 @@
                             <i class="fa fa-tachometer-alt me-2"></i>Dashboard
                         </a>
                     @endif
-                    @if (auth()->user()->role === 'A' || auth()->user()->role === 'U' )
+                    @if (auth()->user()->role === 'A' || auth()->user()->role === 'U' || auth()->user()->role === 'K')
                     <a href="{{ url('alat') }}" class="nav-item nav-link"><i class="fa fa-tractor me-2"></i> Alat Berat</a>
                     @endif
 

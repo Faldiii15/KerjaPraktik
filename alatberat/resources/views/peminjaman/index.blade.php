@@ -24,7 +24,7 @@
                         <th>Nama Alat</th>
                         <th>Nama PT</th>
                         <th>Nama Peminjam</th>
-                        <th>Alamat</th>
+                        <th>Lokasi PT</th>
                         <th>Tanggal Pinjam</th>
                         <th>Tanggal Kembali</th>
                         <th>Keperluan</th>

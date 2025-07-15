@@ -43,13 +43,24 @@ class LaporanController extends Controller
 
     public function laporanPeminjaman()
     {
-        $peminjaman = Peminjaman::with('alat')->get();
+        $peminjaman = Peminjaman::with(['alat', 'anggota.user'])
+            ->join('anggotas', 'peminjamen.anggota_id', '=', 'anggotas.id')
+            ->orderBy('anggotas.nama_pt', 'asc')
+            ->orderBy('peminjamen.tanggal_pinjam', 'asc')
+            ->select('peminjamen.*')
+            ->get();
+
         return view('laporan.peminjaman', compact('peminjaman'));
     }
 
     public function exportPeminjaman()
     {
-        $peminjaman = Peminjaman::with('alat')->get();
+        $peminjaman = Peminjaman::with(['alat', 'anggota.user'])
+            ->join('anggotas', 'peminjamen.anggota_id', '=', 'anggotas.id')
+            ->orderBy('anggotas.nama_pt', 'asc')
+            ->orderBy('peminjamen.tanggal_pinjam', 'asc')
+            ->select('peminjamen.*')
+            ->get();
 
         // Simpan ke tabel laporan
         Laporan::create([
@@ -64,15 +75,29 @@ class LaporanController extends Controller
         return $pdf->download('laporan-peminjaman-alat.pdf');
     }
 
+
     public function laporanPengembalian()
     {
-        $pengembalian = Pengembalian::with(['peminjaman.alat'])->get();
+        $pengembalian = Pengembalian::with(['peminjaman.alat', 'peminjaman.anggota.user'])
+            ->join('peminjamen', 'pengembalians.peminjaman_id', '=', 'peminjamen.id')
+            ->join('anggotas', 'peminjamen.anggota_id', '=', 'anggotas.id')
+            ->orderBy('anggotas.nama_pt', 'asc')
+            ->orderBy('peminjamen.tanggal_pinjam', 'asc')
+            ->select('pengembalians.*')
+            ->get();
+
         return view('laporan.pengembalian', compact('pengembalian'));
     }
 
     public function exportPengembalian()
     {
-        $pengembalian = Pengembalian::with(['peminjaman.alat'])->get();
+        $pengembalian = Pengembalian::with(['peminjaman.alat', 'peminjaman.anggota.user'])
+            ->join('peminjamen', 'pengembalians.peminjaman_id', '=', 'peminjamen.id')
+            ->join('anggotas', 'peminjamen.anggota_id', '=', 'anggotas.id')
+            ->orderBy('anggotas.nama_pt', 'asc')
+            ->orderBy('peminjamen.tanggal_pinjam', 'asc')
+            ->select('pengembalians.*')
+            ->get();
 
         Laporan::create([
             'id' => Str::uuid(),
@@ -85,6 +110,7 @@ class LaporanController extends Controller
         $pdf = PDF::loadView('laporan.pengembalian_pdf', compact('pengembalian'));
         return $pdf->download('laporan-pengembalian-alat.pdf');
     }
+
 
     public function laporanPemeliharaan()
     {

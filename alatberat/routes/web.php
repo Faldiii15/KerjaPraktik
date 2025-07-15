@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
-Route::middleware(['auth', 'role:A,U'])->group(function () {
+Route::middleware(['auth', 'role:A,U,K'])->group(function () {
     Route::get('/alat', [AlatController::class, 'index'])->name('alat.index');
     
 });
