@@ -57,30 +57,42 @@
                             <i class="fa fa-tachometer-alt me-2"></i>Dashboard
                         </a>
                     @endif
+                    @if (auth()->user()->role === 'A' || auth()->user()->role === 'U' )
                     <a href="{{ url('alat') }}" class="nav-item nav-link"><i class="fa fa-tractor me-2"></i> Alat Berat</a>
-                    <a href="{{ url('peminjaman') }}" class="nav-item nav-link"><i class="fa fa-industry me-2"></i>Peminjaman Alat</a>
+                    @endif
+
+                    @if (auth()->user()->role === 'A'|| auth()->user()->role === 'U' || auth()->user()->role === 'K')
+                        <a href="{{ url('peminjaman') }}" class="nav-item nav-link"><i class="fa fa-industry me-2"></i>Peminjaman Alat</a>
+                    @endif
+                    
+                    @if (auth()->user()->role === 'A' || auth()->user()->role === 'U')
                     <a href="{{ url('pengembalian') }}" class="nav-item nav-link"><i class="fa fa-truck"></i>Pengembalian Alat</a>
+                    @endif
+                    
                     @if (auth()->user()->role == 'A') 
-                    <a href="{{ url('pemeliharaan') }}" class="nav-item nav-link"><i class="fa fa-truck"></i>Pemeliharaan Alat</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-file me-2"></i>Laporan
-                        </a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="{{ url('laporan/alat') }}" class="dropdown-item">
-                               <i class="fa fa-file me-2"></i>Laporan Alat Berat
+                        <a href="{{ url('pemeliharaan') }}" class="nav-item nav-link"><i class="fa fa-truck"></i>Pemeliharaan Alat</a>
+                    @endif
+
+                    @if (auth()->user()->role === 'A' || auth()->user()->role === 'K')
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fa fa-file me-2"></i>Laporan
                             </a>
-                            <a href="{{ url('laporan/peminjaman') }}" class="dropdown-item">
-                                <i class="fa fa-file me-2"></i>Laporan Peminjaman
-                            </a>
-                            <a href="{{ url('laporan/pengembalian') }}" class="dropdown-item">
-                                <i class="fa fa-file me-2"></i>Laporan Pengembalian
-                            </a>
-                            <a href="{{ url('laporan/pemeliharaan') }}" class="dropdown-item">
-                                <i class="fa fa-file me-2"></i>Laporan Pemeliharaan
-                            </a>
+                            <div class="dropdown-menu bg-transparent border-0">
+                                <a href="{{ url('laporan/alat') }}" class="dropdown-item">
+                                <i class="fa fa-file me-2"></i>Laporan Alat Berat
+                                </a>
+                                <a href="{{ url('laporan/peminjaman') }}" class="dropdown-item">
+                                    <i class="fa fa-file me-2"></i>Laporan Peminjaman
+                                </a>
+                                <a href="{{ url('laporan/pengembalian') }}" class="dropdown-item">
+                                    <i class="fa fa-file me-2"></i>Laporan Pengembalian
+                                </a>
+                                <a href="{{ url('laporan/pemeliharaan') }}" class="dropdown-item">
+                                    <i class="fa fa-file me-2"></i>Laporan Pemeliharaan
+                                </a>
+                            </div>
                         </div>
-                    </div>
                     @endif
                 </div>
             </nav>

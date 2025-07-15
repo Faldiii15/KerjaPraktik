@@ -4,10 +4,11 @@
 @section('content')
 <div class="container">
     <h1 class="mb-3">Laporan Peminjaman Alat</h1>
-    <a href="{{ route('laporan.peminjaman.pdf') }}" class="btn btn-danger mb-3">
-        <i class="fa fa-file-pdf-o me-1"></i> Export ke PDF
-    </a>
-
+     @if (auth()->user()->role === 'A')
+        <a href="{{ route('laporan.peminjaman.pdf') }}" class="btn btn-danger mb-3">
+            <i class="fa fa-file-pdf-o me-1"></i> Export ke PDF
+        </a>
+    @endif
     <div class="table-responsive">
         <table class="table table-bordered table-striped text-center">
             <thead>

@@ -21,6 +21,20 @@
                 <td>{{ $user->email }}</td>
             </tr>
         </table>
+    @elseif(auth()->user()->role === 'K')
+        <div class="alert alert-info">
+            Anda login sebagai <strong>Kepala PT</strong>.
+        </div>
+        <table class="table table-bordered">
+            <tr>
+                <th>Nama</th>
+                <td>{{ $user->name }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ $user->email }}</td>
+            </tr>
+        </table>
     @else
         <form action="{{ route('profile.update') }}" method="POST">
             @csrf

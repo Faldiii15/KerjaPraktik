@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1>Alat Berat</h1>
-            @if (auth()->user()->role == 'A' || auth()->user()->role == 'P')
+            @if (auth()->user()->role == 'A')
                 <a href="{{ route('alat.create') }}" class="btn btn-primary mb-4">Tambah Alat Berat</a>
             @endif
             <div class="row">

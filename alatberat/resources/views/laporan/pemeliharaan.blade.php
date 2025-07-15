@@ -2,10 +2,11 @@
 @section('content')
 <div class="container">
     <h2>Laporan Pemeliharaan Alat</h2>
-    <a href="{{ route('laporan.pemeliharaan.pdf') }}" class="btn btn-danger my-3">
-      <i class="fa fa-file-pdf-o me-1"></i> Export ke PDF
-    </a>
-
+    @if (auth()->user()->role === 'A')
+        <a href="{{ route('laporan.pemeliharaan.pdf') }}" class="btn btn-danger my-3">
+            <i class="fa fa-file-pdf-o me-1"></i> Export ke PDF
+        </a>
+    @endif
     <table class="table table-bordered text-center">
         <thead>
             <tr>

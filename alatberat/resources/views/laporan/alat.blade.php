@@ -6,9 +6,11 @@
     <div class="row">   
         <div class="col-md-12">
             <h1>Laporan Alat Berat</h1>
-            <a href="{{ route('laporan.alat.pdf') }}" class="btn btn-danger mb-4">
-                <i class="fa fa-file-pdf-o me-1"></i> Export ke PDF
-            </a>
+            @if (auth()->user()->role === 'A')
+                <a href="{{ route('laporan.alat.pdf') }}" class="btn btn-danger mb-4">
+                    <i class="fa fa-file-pdf-o me-1"></i> Export ke PDF
+                </a>
+            @endif
             <div class="table-responsive">
                 <table class="table table-bordered table-striped text-center">
                     <thead>

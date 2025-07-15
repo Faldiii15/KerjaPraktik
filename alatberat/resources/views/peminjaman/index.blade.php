@@ -62,8 +62,10 @@
                                     </button>
 
                                     <div class="dropdown-menu">
+                                        @if (auth()->user()->role == 'U')
                                         <a href="{{ route('peminjaman.edit', $item->id) }}" class="dropdown-item text-dark">Edit</a>
-                                        @if (auth()->user()->role == 'A') 
+                                        @endif
+                                        @if (auth()->user()->role == 'A' || auth()->user()->role == 'K') 
                                             <form action="{{ route('peminjaman.acc', $item->id) }}" method="POST">
                                                 @csrf
                                                 @method('PUT')

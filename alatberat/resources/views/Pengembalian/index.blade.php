@@ -49,7 +49,9 @@
                                 </button>
 
                                 <div class="dropdown-menu">
-                                    <a href="{{ route('pengembalian.edit', $item->id) }}" class="dropdown-item text-dark">Edit</a>
+                                    @if (auth()->user()->role == 'U')
+                                        <a href="{{ route('pengembalian.edit', $item->id) }}" class="dropdown-item text-dark">Edit</a>
+                                    @endif
                                     @if (auth()->user()->role == 'A') 
                                         <form action="{{ route('pengembalian.acc', $item->id) }}" method="POST">
                                             @csrf
