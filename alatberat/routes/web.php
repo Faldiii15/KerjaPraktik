@@ -6,17 +6,10 @@ use App\Http\Controllers\PemeliharaanController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\ProfileController;
-usE App\Http\Controllers\Auth\RegisteredUserController;
-use App\Models\Alat;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\HttpKernel\Profiler\Profile;
 use App\Http\Controllers\LaporanController;
 
 use App\Http\Controllers\DashboardController;
-use App\Models\Anggota;
-use App\Models\Pemeliharaan;
-use App\Models\Peminjaman;
-use App\Models\Pengembalian;
 
 Route::middleware(['auth', 'role:A'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -52,23 +45,24 @@ Route::middleware(['auth', 'role:A,U,K'])->group(function () {
 Route::middleware(['auth', 'role:A,U'])->group(function () {
     Route::get("/peminjaman/create", [PeminjamanController::class, 'create'])->name('peminjaman.create');
     Route::post("/peminjaman/store", [PeminjamanController::class, 'store'])->name('peminjaman.store');
-    Route::put('peminjaman/{peminjaman}/acc', [PeminjamanController::class, 'acc'])->name('peminjaman.acc');
     Route::get("/peminjaman/{peminjaman}/edit", [PeminjamanController::class, 'edit'])->name('peminjaman.edit');
     Route::put("/peminjaman/{peminjaman}/update", [PeminjamanController::class, 'update'])->name('peminjaman.update');          
 });
+Route::middleware(['auth', 'role:A,K'])->group(function () {
+    Route::put('peminjaman/{peminjaman}/acc', [PeminjamanController::class, 'acc'])->name('peminjaman.acc');
+    Route::put('/peminjaman/{id}/alasan', [PeminjamanController::class, 'updateAlasan'])->name('peminjaman.alasan.update');
+    
+});
+
 
 Route::middleware(['auth', 'role:A,U'])->group(function () {
     Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian.index');
 
 });
-
-
 Route::middleware(['auth', 'role:A,U'])->group(function () {
     Route::get("/pengembalian/create", [PengembalianController::class, 'create'])->name('pengembalian.create');
     Route::post("/pengembalian/store", [PengembalianController::class, 'store'])->name('pengembalian.store');
     Route::put('pengembalian/{pengembalian}/acc', [PengembalianController::class, 'acc'])->name('pengembalian.acc');
-    Route::get("/pengembalian/{pengembalian}/edit", [PengembalianController::class, 'edit'])->name('pengembalian.edit');
-    Route::put("/pengembalian/{pengembalian}/update", [PengembalianController::class, 'update'])->name('pengembalian.update');
 });
 
 
@@ -78,6 +72,7 @@ Route::middleware(['auth', 'role:A'])->group(function () {
 Route::middleware(['auth', 'role:A'])->group(function () {
     Route::get("/pemeliharaan/create", [PemeliharaanController::class, 'create'])->name('pemeliharaan.create');
     Route::post("/pemeliharaan/store", [PemeliharaanController::class, 'store'])->name('pemeliharaan.store');
+    Route::put('/pemeliharaan/{id}/selesai', [PemeliharaanController::class, 'selesai'])->name('pemeliharaan.selesai');
     Route::get("/pemeliharaan/{pemeliharaan}/edit", [PemeliharaanController::class, 'edit'])->name('pemeliharaan.edit');
     Route::put("/pemeliharaan/{pemeliharaan}/update", [PemeliharaanController::class, 'update'])->name('pemeliharaan.update');
 });

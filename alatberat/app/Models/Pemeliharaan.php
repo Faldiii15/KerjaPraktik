@@ -21,6 +21,8 @@ class Pemeliharaan extends Model
         'status',
         'teknisi',
         'catatan',
+        'jumlah_unit',    
+        'biaya_pemeliharaan',
     ];
 
     protected static function boot()

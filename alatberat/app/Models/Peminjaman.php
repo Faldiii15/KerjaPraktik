@@ -1,12 +1,15 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Peminjaman extends Model
 {
     use HasFactory;
+
     protected $table = 'peminjamen';
     protected $primaryKey = 'id';
     public $incrementing = false;
@@ -21,7 +24,9 @@ class Peminjaman extends Model
         'tanggal_pinjam',
         'tanggal_kembali',
         'keperluan',
+        'jumlah',                 // ✅ Tambahkan ini
         'status_peminjaman',
+        'alasan_penolakan',       // ✅ Tambahkan ini
     ];
 
     protected static function boot()
@@ -30,7 +35,7 @@ class Peminjaman extends Model
 
         static::creating(function ($model) {
             if (!$model->getKey()) {
-                $model->{$model->getKeyName()} = (string) \Illuminate\Support\Str::uuid();
+                $model->{$model->getKeyName()} = (string) Str::uuid();
             }
         });
     }
@@ -44,6 +49,7 @@ class Peminjaman extends Model
     {
         return $this->belongsTo(Alat::class, 'alat_id', 'id');
     }
+
     public function user()
     {
         return $this->belongsTo(User::class);

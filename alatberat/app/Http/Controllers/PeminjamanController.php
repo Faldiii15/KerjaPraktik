@@ -14,16 +14,14 @@ class PeminjamanController extends Controller
     {
         $user = Auth::user();
 
-        // Admin & Kepala PT bisa lihat semua data
         if ($user->role === 'A' || $user->role === 'K') {
             $peminjaman = Peminjaman::with(['alat', 'anggota.user'])
-            ->join('anggotas', 'peminjamen.anggota_id', '=', 'anggotas.id')
-            ->orderBy('anggotas.nama_pt')
-            ->orderBy('peminjamen.tanggal_pinjam')
-            ->select('peminjamen.*') // penting untuk menghindari konflik join
-            ->get();
+                ->join('anggotas', 'peminjamen.anggota_id', '=', 'anggotas.id')
+                ->orderBy('anggotas.nama_pt')
+                ->orderBy('peminjamen.tanggal_pinjam')
+                ->select('peminjamen.*')
+                ->get();
         } else {
-            // User hanya lihat data miliknya
             $anggota = Anggota::where('user_id', $user->id)->first();
             $peminjaman = Peminjaman::with(['alat', 'anggota.user'])
                 ->where('anggota_id', $anggota->id)
@@ -35,12 +33,10 @@ class PeminjamanController extends Controller
 
     public function create()
     {
-        $alat = Alat::where('status', 'tersedia')->get();
+        $alat = Alat::where('jumlah', '>', 0)->get();
         $anggota = Anggota::where('user_id', Auth::id())->first();
 
-        return view('peminjaman.create')
-            ->with('alat', $alat)
-            ->with('anggota', $anggota);
+        return view('peminjaman.create', compact('alat', 'anggota'));
     }
 
     public function store(Request $request)
@@ -54,59 +50,34 @@ class PeminjamanController extends Controller
             'tanggal_pinjam' => 'required|date',
             'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
             'keperluan' => 'required|string|max:255',
+            'jumlah' => 'required|integer|min:1',
         ]);
 
-        // Validasi agar user hanya bisa mengajukan atas nama dirinya
         $anggota = Anggota::where('user_id', Auth::id())->first();
         if ($val['anggota_id'] != $anggota->id) {
             abort(403, 'Anda tidak berhak mengajukan peminjaman ini.');
         }
 
-        // Validasi ketersediaan alat
         $alat = Alat::find($val['alat_id']);
-        if ($alat->status !== 'tersedia') {
-            return back()->withErrors(['alat_id' => 'Alat tidak tersedia.'])->withInput();
+        if ($alat->jumlah < $val['jumlah']) {
+            return back()->withErrors(['jumlah' => 'Jumlah melebihi stok tersedia'])->withInput();
         }
 
         $val['status_peminjaman'] = 'pending';
+
         Peminjaman::create($val);
 
-        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil diajukan dan menunggu persetujuan.');
-    }
-
-    public function acc(Request $request, $id)
-    {
-        $user = Auth::user();
-
-        // Hanya Admin & Kepala PT yang boleh ACC
-        if (!in_array($user->role, ['A', 'K'])) {
-            abort(403, 'Anda tidak memiliki izin untuk melakukan aksi ini.');
-        }
-
-        $peminjaman = Peminjaman::findOrFail($id);
-        $status = $request->input('status_peminjaman');
-
-        if (!in_array($status, ['Disetujui', 'ditolak', 'Dikembalikan'])) {
-            return back()->withErrors(['status_peminjaman' => 'Status tidak valid.']);
-        }
-
-        $peminjaman->status_peminjaman = $status;
-        $peminjaman->save();
-
-        $alat = $peminjaman->alat;
-        if ($status === 'Disetujui') {
-            $alat->status = 'dipinjam';
-        } else {
-            $alat->status = 'tersedia';
-        }
-        $alat->save();
-
-        return redirect()->route('peminjaman.index')->with('success', 'Status peminjaman berhasil diperbarui.');
+        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil diajukan.');
     }
 
     public function edit(Peminjaman $peminjaman)
     {
-        $alat = Alat::where('status', 'tersedia')
+        // Cegah akses jika status bukan pending
+        if ($peminjaman->status_peminjaman !== 'pending') {
+            abort(403, 'Peminjaman ini sudah diverifikasi dan tidak dapat diedit.');
+        }
+
+        $alat = Alat::where('jumlah', '>', 0)
             ->orWhere('id', $peminjaman->alat_id)
             ->get();
 
@@ -124,9 +95,9 @@ class PeminjamanController extends Controller
             'tanggal_pinjam' => 'required|date',
             'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
             'keperluan' => 'required|string|max:255',
+            'jumlah' => 'required|integer|min:1',
         ]);
 
-        // Validasi agar user hanya bisa ubah miliknya
         $anggota = Anggota::where('user_id', Auth::id())->first();
         if ($validatedData['anggota_id'] != $anggota->id) {
             abort(403, 'Anda tidak berhak memperbarui peminjaman ini.');
@@ -137,13 +108,63 @@ class PeminjamanController extends Controller
         return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil diperbarui.');
     }
 
-    public function show(Peminjaman $peminjaman)
+    public function acc(Request $request, $id)
     {
-        //
-    }
+        $user = Auth::user();
+        if (!in_array($user->role, ['A', 'K'])) {
+            abort(403, 'Anda tidak memiliki izin untuk memproses.');
+        }
 
-    public function destroy(Peminjaman $peminjaman)
+        $request->validate([
+            'status_peminjaman' => 'required|in:Disetujui,ditolak,selesai',
+            'alasan_penolakan' => 'nullable|string|max:255',
+        ]);
+
+        $peminjaman = Peminjaman::findOrFail($id);
+        $status = $request->input('status_peminjaman');
+        $alasan = $request->input('alasan_penolakan');
+        $alat = $peminjaman->alat;
+
+        if ($status === 'Disetujui') {
+            if ($alat->jumlah < $peminjaman->jumlah) {
+                return back()->withErrors(['jumlah' => 'Stok alat tidak mencukupi.']);
+            }
+
+            $alat->decrement('jumlah', $peminjaman->jumlah);
+            $peminjaman->status_peminjaman = 'Disetujui';
+            $peminjaman->alasan_penolakan = null;
+        }
+
+        if ($status === 'ditolak') {
+            $peminjaman->status_peminjaman = 'ditolak';
+            $peminjaman->alasan_penolakan = $alasan ?? '-';
+        }
+
+        if ($status === 'selesai') {
+            $peminjaman->status_peminjaman = 'selesai';
+            $alat->increment('jumlah', $peminjaman->jumlah); // Kembalikan stok alat
+        }
+
+        $peminjaman->save();
+        $alat->save();
+
+        return redirect()->route('peminjaman.index')->with('success', 'Status peminjaman diperbarui.');
+    }
+    public function updateAlasan(Request $request, $id)
     {
-        //
+        $user = Auth::user();
+        if (!in_array($user->role, ['A', 'K'])) {
+            abort(403, 'Tidak memiliki izin.');
+        }
+
+        $request->validate([
+            'alasan_penolakan' => 'required|string|max:255',
+        ]);
+
+        $peminjaman = Peminjaman::findOrFail($id);
+        $peminjaman->alasan_penolakan = $request->input('alasan_penolakan');
+        $peminjaman->save();
+
+        return redirect()->route('peminjaman.index')->with('success', 'Alasan penolakan berhasil diperbarui.');
     }
 }

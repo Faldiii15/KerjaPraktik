@@ -18,7 +18,7 @@
                         <option value="">Pilih Peminjaman</option>
                         @foreach($peminjaman as $item)
                             <option value="{{ $item->id }}" {{ old('peminjaman_id') == $item->id ? 'selected' : '' }}>
-                                {{ $item->nama_peminjam }} - {{ $item->alat->nama ?? '-' }} ({{ $item->tanggal_pinjam }} s/d {{ $item->tanggal_kembali }})
+                                {{ $item->nama_peminjam }} - {{ $item->nama_pt }} - {{ $item->alat->nama ?? '-' }} ({{ $item->tanggal_pinjam }} s/d {{ $item->tanggal_kembali }})
                             </option>
                         @endforeach
                     </select>
@@ -50,6 +50,7 @@
                     @enderror
                 </div>
 
+                {{-- Catatan --}}
                 <div class="form-group mt-3">
                     <label for="catatan">Catatan</label>
                     <textarea class="form-control" id="catatan" name="catatan" rows="3">{{ old('catatan') }}</textarea>

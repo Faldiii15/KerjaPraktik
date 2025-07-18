@@ -24,10 +24,11 @@
             <tr>
                 <th>No</th>
                 <th>Nama Peminjam</th>
+                <th>Nama PT</th>
                 <th>Alat</th>
-                <th>Tgl Pinjam</th>
-                <th>Tgl Kembali</th>
-                <th>Tgl Pengembalian</th>
+                <th>Tanggal Pinjam</th>
+                <th>Tanggal Kembali</th>
+                <th>Tanggal Pengembalian</th>
                 <th>Kondisi</th>
             </tr>
         </thead>
@@ -35,10 +36,11 @@
             @foreach($pengembalian as $kembali)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $kembali->peminjaman->nama_peminjam ?? '-' }}</td>
-                <td>{{ $kembali->peminjaman->alat->nama ?? '-' }}</td>
-                <td>{{ $kembali->peminjaman->tanggal_pinjam ?? '-' }}</td>
-                <td>{{ $kembali->peminjaman->tanggal_kembali ?? '-' }}</td>
+                <td>{{ $kembali->peminjaman->anggota->user->name ?? '' }}</td>
+                <td>{{ $kembali->peminjaman->anggota->nama_pt ?? '' }}</td>
+                <td>{{ $kembali->peminjaman->alat->nama ?? '' }}</td>
+                <td>{{ $kembali->peminjaman->tanggal_pinjam ?? '' }}</td>
+                <td>{{ $kembali->peminjaman->tanggal_kembali ?? '' }}</td>
                 <td>{{ $kembali->tanggal_kembali }}</td>
                 <td>{{ ucfirst($kembali->kondisi_alat) }}</td>
             </tr>

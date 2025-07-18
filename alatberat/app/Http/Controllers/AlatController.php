@@ -5,78 +5,69 @@ namespace App\Http\Controllers;
 use App\Models\Alat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class AlatController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Menampilkan daftar alat untuk user (tampilan kartu)
     public function index()
     {
         $alat = Alat::all();
-        return view('alat.index')->with('alat', $alat);
+        $user = auth()->user();
+        $isAdmin = $user && $user->role === 'A';
+
+        return view('alat.index')->with([
+            'alat' => $alat,
+            'isAdmin' => $isAdmin,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Menampilkan form untuk menambah alat baru
     public function create()
     {
         return view('alat.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Menyimpan data alat baru ke database
     public function store(Request $request)
     {
         $val = $request->validate([
-            'kode_alat' => 'required|string|max:10',
+            'kode_alat' => 'required|string|max:10|unique:alats,kode_alat',
             'nama' => 'required|string|max:255',
             'jenis' => 'required|string|max:255',
             'merek' => 'required|string|max:255',
             'tahun_pembelian' => 'required|date_format:Y',
+            'jumlah' => 'required|integer|min:0',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         if ($request->hasFile('foto')) {
-        $file = $request->file('foto');
-        $filename = Str::uuid() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('fotoalat'), $filename);
-        $val['foto'] = $filename;
-    }
+            $file = $request->file('foto');
+            $filename = Str::uuid() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('fotoalat'), $filename);
+            $val['foto'] = $filename;
+        }
 
         Alat::create($val);
-        return redirect()->route('alat.index')->with('success', $val['kode_alat'] . 'Alat berhasil ditambahkan.');
+        return redirect()->route('alat.index')->with('success', $val['kode_alat'] . ' berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Alat $alat)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Menampilkan form untuk mengedit data alat
     public function edit(Alat $alat)
     {
         return view('alat.edit')->with('alat', $alat);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // Memperbarui data alat yang sudah ada di database
     public function update(Request $request, Alat $alat)
     {
         $val = $request->validate([
-            'kode_alat' => 'required|string|max:10',
+            'kode_alat' => 'required|string|max:10|unique:alats,kode_alat,' . $alat->id,
             'nama' => 'required|string|max:255',
             'jenis' => 'required|string|max:255',
             'merek' => 'required|string|max:255',
             'tahun_pembelian' => 'required|date_format:Y',
+            'jumlah' => 'required|integer|min:1',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -91,13 +82,8 @@ class AlatController extends Controller
             $file->move(public_path('fotoalat'), $filename);
             $val['foto'] = $filename;
         }
-        
 
         $alat->update($val);
         return redirect()->route('alat.index')->with('success', $val['kode_alat'] . ' berhasil diperbarui.');
-    }
-    public function destroy(Alat $alat)
-    {
-        //
     }
 }

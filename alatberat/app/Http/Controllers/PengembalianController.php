@@ -93,6 +93,11 @@ class PengembalianController extends Controller
         $pengembalian = Pengembalian::findOrFail($id);
         $status = $request->input('status_pengembalian');
 
+        // Cegah ACC ulang
+        if ($pengembalian->status_pengembalian === 'Diterima') {
+            return back()->with('warning', 'Pengembalian ini sudah disetujui sebelumnya.');
+        }
+
         if (!in_array($status, ['Diterima', 'ditolak'])) {
             return back()->withErrors(['status_pengembalian' => 'Status tidak valid.']);
         }
@@ -105,12 +110,18 @@ class PengembalianController extends Controller
 
         if ($status === 'Diterima') {
             $peminjaman->status_peminjaman = 'dikembalikan';
+
             if ($alat) {
+                // Tambahkan kembali jumlah unit alat
+                $alat->jumlah += $peminjaman->jumlah;
                 $alat->status = 'tersedia';
                 $alat->save();
             }
+
         } elseif ($status === 'ditolak') {
+            // Jika ditolak, status pinjam tetap aktif
             $peminjaman->status_peminjaman = 'Disetujui';
+
             if ($alat) {
                 $alat->status = 'dipinjam';
                 $alat->save();
@@ -122,53 +133,5 @@ class PengembalianController extends Controller
         return redirect()->route('pengembalian.index')->with('success', 'Status pengembalian berhasil diperbarui.');
     }
 
-    public function edit(Pengembalian $pengembalian)
-    {
-        $anggota = Anggota::where('user_id', Auth::id())->first();
-        $peminjaman = Peminjaman::where('status_peminjaman', 'Disetujui')
-            ->where('anggota_id', $anggota->id)
-            ->get();
 
-        return view('pengembalian.edit', compact('pengembalian', 'peminjaman'));
-    }
-
-    public function update(Request $request, Pengembalian $pengembalian)
-    {
-        $val = $request->validate([
-            'peminjaman_id' => 'required|exists:peminjamen,id',
-            'tanggal_kembali' => 'required|date',
-            'kondisi_alat' => 'required|in:baik,rusak,hilang',
-            'catatan' => 'nullable|string|max:255',
-        ]);
-
-        $peminjaman = Peminjaman::findOrFail($val['peminjaman_id']);
-        $anggota = Anggota::where('user_id', Auth::id())->first();
-
-        if ($peminjaman->anggota_id !== $anggota->id) {
-            abort(403, 'Anda tidak berhak memperbarui data ini.');
-        }
-
-        if ($val['tanggal_kembali'] < $peminjaman->tanggal_pinjam) {
-            return back()->withErrors(['tanggal_kembali' => 'Tanggal pengembalian tidak boleh sebelum tanggal pinjam.'])->withInput();
-        }
-
-        if ($val['tanggal_kembali'] > $peminjaman->tanggal_kembali) {
-            return back()->withErrors(['tanggal_kembali' => 'Tanggal pengembalian melebihi batas waktu.'])->withInput();
-        }
-
-        $val['status_pengembalian'] = 'pending';
-        $pengembalian->update($val);
-
-        return redirect()->route('pengembalian.index')->with('success', 'Pengembalian berhasil diperbarui.');
-    }
-
-    public function show(Pengembalian $pengembalian)
-    {
-        //
-    }
-
-    public function destroy(Pengembalian $pengembalian)
-    {
-        //
-    }
 }

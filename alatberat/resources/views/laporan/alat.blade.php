@@ -21,7 +21,7 @@
                             <th>Jenis Alat</th>
                             <th>Merk</th>
                             <th>Tahun Pembelian</th>
-                            <th>Status</th>
+                            <th>Jumlah/Unit</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,12 +34,8 @@
                                 <td>{{ $a->merek }}</td>
                                 <td>{{ $a->tahun_pembelian }}</td>
                                 <td>
-                                    @if($a->status == 'tersedia')
-                                        <span class="badge bg-success">Tersedia</span>
-                                    @else
-                                        <span class="badge bg-secondary">{{ ucfirst($a->status) }}</span>
-                                    @endif
-                                </td>       
+                                    <span class="badge bg-info text-dark">{{ $a->jumlah ?? 0 }} unit</span>
+                                </td>
                             </tr>
                         @empty
                             <tr>

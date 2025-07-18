@@ -7,14 +7,19 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="h3">Daftar Pengembalian Alat Berat</h1>
+
             @if (auth()->user()->role == 'U')    
-            <a href="{{ route('pengembalian.create') }}" class="btn btn-primary">Tambah Pengembalian</a>
+                <a href="{{ route('pengembalian.create') }}" class="btn btn-primary mb-3">
+                    Tambah Pengembalian
+                </a>
             @endif
-            <table class="table table-bordered table-striped table-hover table-primary align-middle text-center mt-3">
+
+            <table class="table table-bordered table-striped table-hover table-primary align-middle text-center">
                 <thead class="table-primary">
-                    <tr class="text-center">
+                    <tr>
                         <th>No</th>
                         <th>Nama Peminjam</th>
+                        <th>Nama PT</th>
                         <th>Nama Alat</th>
                         <th>Tanggal Kembali</th>
                         <th>Kondisi Alat</th>
@@ -25,49 +30,54 @@
                 </thead>
                 <tbody>
                     @forelse ($pengembalian as $index => $item)
-                        <tr class="text-center">
+                        <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ optional($item->peminjaman)->nama_peminjam ?? '-' }}</td>
-                            <td>{{ optional(optional($item->peminjaman)->alat)->nama ?? '-' }}</td>
-                            <td>{{ $item->tanggal_kembali }}</td>
-                            <td>{{ ucfirst($item->kondisi_alat) }}</td>
+                            <td>{{ $item->peminjaman->nama_peminjam ?? '-' }}</td>
+                            <td>{{ $item->peminjaman->nama_pt ?? '-' }}</td>
+                            <td>{{ $item->peminjaman->alat->nama ?? '-' }}</td>
+                            <td>{{ $item->tanggal_kembali ?? '-' }}</td>
+                            <td>{{ ucfirst($item->kondisi_alat ?? '-') }}</td>
                             <td>{{ $item->catatan ?? '-' }}</td>
                             <td>
-                                @if($item->status_pengembalian == 'pending')
-                                    <span class="text-warning">Pending</span>
-                                @elseif($item->status_pengembalian == 'Diterima')
-                                    <span class="text-success">Diterima</span>
-                                @elseif($item->status_pengembalian == 'ditolak')
-                                    <span class="text-danger">Ditolak</span>
-                                @else
-                                    <span class="text-muted">Tidak Diketahui</span>
-                                @endif
+                                @switch($item->status_pengembalian)
+                                    @case('pending')
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        @break
+                                    @case('Diterima')
+                                        <span class="badge bg-success">Diterima</span>
+                                        @break
+                                    @case('ditolak')
+                                        <span class="badge bg-danger">Ditolak</span>
+                                        @break
+                                    @default
+                                        <span class="badge bg-secondary">Tidak Diketahui</span>
+                                @endswitch
                             </td>
-                            <td class="dropdown text-center">
-                                <button type="button" class="btn p-0 hide-arrow" data-bs-toggle="dropdown">
-                                    <i class="bi bi-three-dots-vertical fs-5"></i>
-                                </button>
-
-                                <div class="dropdown-menu">
-                                    @if (auth()->user()->role == 'U')
-                                        <a href="{{ route('pengembalian.edit', $item->id) }}" class="dropdown-item text-dark">Edit</a>
-                                    @endif
-                                    @if (auth()->user()->role == 'A') 
-                                        <form action="{{ route('pengembalian.acc', $item->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" name="status_pengembalian" value="Diterima" 
-                                            class="dropdown-item text-success bg-transparent border-0">Setujui</button>
-                                            <button type="submit" name="status_pengembalian" value="ditolak" 
-                                            class="dropdown-item text-danger bg-transparent border-0">Tolak</button>
-                                        </form>
-                                    @endif
-                                </div>
+                            <td>
+                                @if(auth()->user()->role == 'A' && $item->status_pengembalian === 'pending')
+                                    <div class="dropdown text-center">
+                                        <button type="button" class="btn p-0" data-bs-toggle="dropdown">
+                                            <i class="bi bi-three-dots-vertical fs-5"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <form action="{{ route('pengembalian.acc', $item->id) }}" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="submit" name="status_pengembalian" value="Diterima" 
+                                                    class="dropdown-item text-success bg-transparent border-0">Setujui</button>
+                                                <button type="submit" name="status_pengembalian" value="ditolak" 
+                                                    class="dropdown-item text-danger bg-transparent border-0">Tolak</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center">Data pengembalian belum tersedia.</td>
+                            <td colspan="9" class="text-center">Data pengembalian belum tersedia.</td>
                         </tr>
                     @endforelse
                 </tbody>

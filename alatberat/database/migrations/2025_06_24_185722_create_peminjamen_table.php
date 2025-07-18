@@ -20,8 +20,10 @@ return new class extends Migration
             $table->string('alamat');
             $table->date('tanggal_pinjam')->nullable();
             $table->date('tanggal_kembali')->nullable();
+            $table->unsignedInteger('jumlah'); // ✅ jumlah alat dipinjam
             $table->text('keperluan')->nullable();
-            $table->text('status_peminjaman')->default('pending');
+            $table->text('status_peminjaman')->default('pending'); // pending, disetujui, ditolak, selesai
+            $table->text('alasan_penolakan')->nullable(); // ✅ alasan jika ditolak
             $table->timestamps();
         });
     }

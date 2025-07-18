@@ -24,7 +24,9 @@
                 <th>Alat</th>
                 <th>Teknisi</th>
                 <th>Tanggal</th>
-                <th>Deskripsi</th>
+                <th>Jumlah Unit</th>
+                <th>Biaya (Rp)</th>
+                <th>Catatan</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -33,9 +35,11 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $item->alat->nama ?? '-' }}</td>
-                <td>{{ $item->teknisi}}</td>
-                <td>{{ $item->tanggal}}</td>
-                <td>{{ $item->deskripsi }}</td>
+                <td>{{ $item->teknisi }}</td>
+                <td>{{ $item->tanggal }}</td>
+                <td>{{ $item->jumlah_unit }}</td>
+                <td>{{ number_format($item->biaya_pemeliharaan, 0, ',', '.') }}</td>
+                <td>{{ $item->catatan }}</td>
                 <td>{{ ucfirst($item->status) }}</td>
             </tr>
             @endforeach
@@ -43,7 +47,7 @@
     </table>
 
     <p class="summary">
-        Total Peminjam: <strong>{{ $data->count() }}</strong>
+        Total Pemeliharaan: <strong>{{ $data->count() }}</strong>
     </p>
 
     <div class="footer">

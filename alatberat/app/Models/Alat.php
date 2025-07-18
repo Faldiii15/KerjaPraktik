@@ -18,8 +18,8 @@ class Alat extends Model
         'jenis',
         'merek',
         'tahun_pembelian',
+        'jumlah',
         'foto',
-        'status'
     ];
 
     protected static function boot()

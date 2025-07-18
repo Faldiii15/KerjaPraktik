@@ -29,7 +29,7 @@
                 <th>Jenis Alat</th>
                 <th>Merk</th>
                 <th>Tahun Pembelian</th>
-                <th>Status</th>
+                <th>Jumlah/Unit</th>
             </tr>
         </thead>
         <tbody>
@@ -41,7 +41,7 @@
                 <td>{{ $a->jenis }}</td>
                 <td>{{ $a->merek }}</td>
                 <td>{{ $a->tahun_pembelian }}</td>
-                <td>{{ ucfirst($a->status) }}</td>
+                <td>{{ $a->jumlah ?? 0 }} unit</td>
             </tr>
             @endforeach
         </tbody>

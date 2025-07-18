@@ -12,7 +12,7 @@
 
                 <div class="form-group mt-3">
                     <label for="kode_alat">Kode Alat</label>
-                    <input type="text" class="form-control" id="kode_alat" name="kode_alat" maxlength="10"  required>
+                    <input type="text" class="form-control" id="kode_alat" name="kode_alat" maxlength="10" required>
                     @error('kode_alat')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>
                     @enderror
@@ -44,8 +44,16 @@
 
                 <div class="form-group mt-3">
                     <label for="tahun_pembelian">Tahun Pembelian</label>
-                    <input type="number" class="form-control" id="tahun_pembelian" name="tahun_pembelian" required> 
+                    <input type="number" class="form-control" id="tahun_pembelian" name="tahun_pembelian" required>
                     @error('tahun_pembelian')
+                        <div class="alert alert-danger mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="jumlah">Jumlah/Unit</label>
+                    <input type="number" class="form-control" id="jumlah" name="jumlah" min="1" required>
+                    @error('jumlah')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>
                     @enderror
                 </div>

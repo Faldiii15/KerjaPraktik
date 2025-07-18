@@ -58,39 +58,77 @@
                         </a>
                     @endif
                     @if (auth()->user()->role === 'A' || auth()->user()->role === 'U' || auth()->user()->role === 'K')
-                    <a href="{{ url('alat') }}" class="nav-item nav-link"><i class="fa fa-tractor me-2"></i> Alat Berat</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fa fa-tractor me-2"></i> Alat Berat
+                            </a>
+                            <div class="dropdown-menu bg-transparent border-0 ps-0 ms-0 w-100">
+                                <a href="{{ route('alat.index') }}" class="dropdown-item d-flex align-items-center">
+                                    <i class="fa fa-database me-2"></i> Data Alat Berat
+                                </a>
+                                @if(auth()->user()->role === 'A' || auth()->user()->role === 'K')
+                                    <a href="{{ route('laporan.alat') }}" class="dropdown-item d-flex align-items-center">
+                                        <i class="fa fa-file me-2"></i> Laporan Alat Berat
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
                     @endif
 
                     @if (auth()->user()->role === 'A'|| auth()->user()->role === 'U' || auth()->user()->role === 'K')
-                        <a href="{{ url('peminjaman') }}" class="nav-item nav-link"><i class="fa fa-industry me-2"></i>Peminjaman Alat</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fa fa-industry me-2"></i> Peminjaman
+                            </a>
+                            <div class="dropdown-menu bg-transparent border-0 ps-0 ms-0 w-100">
+                                <a href="{{ route('peminjaman.index') }}" class="dropdown-item d-flex align-items-center">
+                                    <i class="fa fa-dolly me-2"></i> Peminjaman alat
+                                </a>
+                                @if(auth()->user()->role === 'A' || auth()->user()->role === 'K')
+                                    <a href="{{ route('laporan.peminjaman') }}" class="dropdown-item d-flex align-items-center">
+                                        <i class="fa fa-file me-2"></i> Laporan peminjaman
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
                     @endif
-                    
-                    @if (auth()->user()->role === 'A' || auth()->user()->role === 'U')
-                    <a href="{{ url('pengembalian') }}" class="nav-item nav-link"><i class="fa fa-truck"></i>Pengembalian Alat</a>
-                    @endif
-                    
-                    @if (auth()->user()->role == 'A') 
-                        <a href="{{ url('pemeliharaan') }}" class="nav-item nav-link"><i class="fa fa-truck"></i>Pemeliharaan Alat</a>
+
+                    @if (auth()->user()->role === 'A'|| auth()->user()->role === 'U' || auth()->user()->role === 'K')
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fa fa fa-truck me-2"></i> Pengembalian
+                            </a>
+                            <div class="dropdown-menu bg-transparent border-0 ps-0 ms-0 w-100">
+                                @if(auth()->user()->role === 'A' || auth()->user()->role === 'U')
+                                    <a href="{{ route('pengembalian.index') }}" class="dropdown-item d-flex align-items-center">
+                                        <i class="fa fa-sync-alt me-2"></i> Pengembalian alat
+                                    </a>
+                                @endif
+                                @if(auth()->user()->role === 'A' || auth()->user()->role === 'K')
+                                    <a href="{{ route('laporan.pengembalian') }}" class="dropdown-item d-flex align-items-center">
+                                        <i class="fa fa-file me-2"></i> Laporan pengembalian
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
                     @endif
 
                     @if (auth()->user()->role === 'A' || auth()->user()->role === 'K')
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="fa fa-file me-2"></i>Laporan
+                                <i class="fa fa-cogs me-2"></i> Pemeliharaan
                             </a>
-                            <div class="dropdown-menu bg-transparent border-0">
-                                <a href="{{ url('laporan/alat') }}" class="dropdown-item">
-                                <i class="fa fa-file me-2"></i>Laporan Alat Berat
-                                </a>
-                                <a href="{{ url('laporan/peminjaman') }}" class="dropdown-item">
-                                    <i class="fa fa-file me-2"></i>Laporan Peminjaman
-                                </a>
-                                <a href="{{ url('laporan/pengembalian') }}" class="dropdown-item">
-                                    <i class="fa fa-file me-2"></i>Laporan Pengembalian
-                                </a>
-                                <a href="{{ url('laporan/pemeliharaan') }}" class="dropdown-item">
-                                    <i class="fa fa-file me-2"></i>Laporan Pemeliharaan
-                                </a>
+                            <div class="dropdown-menu bg-transparent border-0 ps-0 ms-0 w-100">
+                                @if(auth()->user()->role === 'A')
+                                    <a href="{{ route('pemeliharaan.index') }}" class="dropdown-item d-flex align-items-center">
+                                        <i class="fa fa-tools me-2"></i> Pemeliharaan alat
+                                    </a>
+                                @endif
+                                @if(auth()->user()->role === 'A' || auth()->user()->role === 'K')
+                                    <a href="{{ route('laporan.pemeliharaan') }}" class="dropdown-item d-flex align-items-center">
+                                        <i class="fa fa-file me-2"></i> Laporan pemeliharaan
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     @endif
@@ -147,7 +185,7 @@
 
     <!-- JavaScript Libraries -->
     <script src={{ url("https://code.jquery.com/jquery-3.4.1.min.js") }}></script>
-    <script src={{ url("https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js") }}></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src={{ url("lib/chart/chart.min.js") }}></script>
     <script src={{ url("lib/easing/easing.min.js") }}></script>
     <script src={{ url("lib/waypoints/waypoints.min.js") }}></script>
