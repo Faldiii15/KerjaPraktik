@@ -4,16 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Alat;
+use App\Models\UnitAlatBerat;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class Pemeliharaan extends Model
 {
     use HasFactory;
     protected $table = 'pemeliharaans';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
-
 
     protected $fillable = [
         'alat_id',   // foreign key
@@ -24,21 +22,15 @@ class Pemeliharaan extends Model
         'jumlah_unit',    
         'biaya_pemeliharaan',
     ];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            if (!$model->getKey()) {
-                $model->{$model->getKeyName()} = (string) \Illuminate\Support\Str::uuid();
-            }
-        });
-    }
-
     
     public function alat()
     {
         return $this->belongsTo(Alat::class, 'alat_id', 'id');
     }
+
+    public function units()
+    {
+        return $this->belongsToMany(UnitAlatBerat::class, 'pemeliharaan_unit', 'pemeliharaan_id', 'unit_alat_id');
+    }
+
 }

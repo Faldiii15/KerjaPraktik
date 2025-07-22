@@ -74,6 +74,11 @@
                             </div>
                         </div>
                     @endif
+                    @if(auth()->user()->role === 'A')
+                        <a href="{{ route('anggota.index') }}" class="nav-item nav-link">
+                            <i class="fa fa-users me-2"></i> Data Customer
+                        </a>
+                    @endif
 
                     @if (auth()->user()->role === 'A'|| auth()->user()->role === 'U' || auth()->user()->role === 'K')
                         <div class="nav-item dropdown">

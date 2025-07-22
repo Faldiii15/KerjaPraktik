@@ -14,7 +14,7 @@
                 </div>
             @endif
 
-            @if (auth()->user()->role == 'U')     
+            @if (in_array(auth()->user()->role, ['U', 'A']))
                 <a href="{{ route('peminjaman.create') }}" class="btn btn-primary">Tambah Peminjaman</a>
             @endif
 
@@ -22,13 +22,15 @@
                 <thead class="table-primary">
                     <tr>
                         <th>No</th>
-                        <th>Nama Alat</th>
-                        <th>Jumlah</th>
                         <th>Nama PT</th>
-                        <th>Nama Peminjam</th>
+                        <th>Nama Customer</th>
                         <th>Lokasi PT</th>
+                        <th>No Telepon</th>
                         <th>Tanggal Pinjam</th>
                         <th>Tanggal Kembali</th>
+                        <th>Nama Alat</th>
+                        <th>Kode Alat</th>
+                        <th>Jumlah</th>
                         <th>Keperluan</th>
                         <th>Status</th>
                         <th>Aksi</th>
@@ -38,13 +40,23 @@
                     @forelse($peminjaman as $index => $item)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $item->alat->nama ?? '-' }}</td>
-                            <td>{{ $item->jumlah ?? '-' }}</td>
                             <td>{{ $item->nama_pt ?? '-' }}</td>
-                            <td>{{ $item->anggota->user->name ?? '-' }}</td>
+                            <td>{{ $item->anggota->user->name ?? $item->nama_peminjam ?? '-' }}</td>
                             <td>{{ $item->alamat ?? '-' }}</td>
-                            <td>{{ $item->tanggal_pinjam }}</td>
-                            <td>{{ $item->tanggal_kembali }}</td>
+                            <td>{{ $item->no_hp ?? '-' }}</td>
+                           <td>{{ $item->tanggal_pinjam ? \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d-m-Y') : '-' }}</td>
+                            <td>{{ $item->tanggal_kembali ? \Carbon\Carbon::parse($item->tanggal_kembali)->format('d-m-Y') : '-' }}</td>
+                            <td>{{ $item->alat->nama ?? '-' }}</td>
+                            <td>
+                                @if($item->units && $item->units->count())
+                                    @foreach($item->units as $unit)
+                                        <span class="badge bg-info text-dark mb-1">{{ $unit->kode_alat }}</span><br>
+                                    @endforeach
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
+                            <td>{{ $item->jumlah ?? '-' }}</td>
                             <td>{{ $item->keperluan ?? '-' }}</td>
                             <td>
                                 @switch($item->status_peminjaman)
@@ -60,7 +72,7 @@
                                             Lihat Alasan
                                         </button>
 
-                                        <!-- Modal Lihat Alasan -->
+                                        {{-- Modal Alasan --}}
                                         <div class="modal fade" id="alasanModal-{{ $item->id }}" tabindex="-1">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -84,18 +96,15 @@
                                     @case('selesai')
                                         <span class="text-primary">Selesai</span>
                                         @break
-                                    @case('dikembalikan')
-                                        <span class="text-info">Dikembalikan</span>
-                                        @break
                                     @default
-                                        <span class="text-muted">Tidak Diketahui</span>
+                                        <span class="text-muted">-</span>
                                 @endswitch
                             </td>
                             <td>
                                 @php
                                     $status = $item->status_peminjaman;
                                     $canEdit = auth()->user()->role === 'U' && $status === 'pending';
-                                    $canAcc = (auth()->user()->role === 'A' || auth()->user()->role === 'K') && $status === 'pending';
+                                    $canAcc = in_array(auth()->user()->role, ['A', 'K']) && $status === 'pending';
                                 @endphp
 
                                 @if($canEdit || $canAcc)
@@ -158,7 +167,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="11" class="text-center">Data peminjaman belum tersedia.</td>
+                            <td colspan="13" class="text-center">Data peminjaman belum tersedia.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -167,7 +176,7 @@
     </div>
 </div>
 
-{{-- Script Toggle --}}
+{{-- Script Modal ACC --}}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         window.toggleReasonField = function (id) {
@@ -175,11 +184,7 @@
             const reason = document.getElementById('reasonField-' + id);
             if (select && reason) {
                 const val = select.value.toLowerCase();
-                if (val === 'ditolak') {
-                    reason.classList.remove('d-none');
-                } else {
-                    reason.classList.add('d-none');
-                }
+                reason.classList.toggle('d-none', val !== 'ditolak');
             }
         };
 

@@ -16,8 +16,8 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Kode Alat</th>
                             <th>Nama Alat</th>
+                            <th>Kode Unit & Status</th>
                             <th>Jenis Alat</th>
                             <th>Merk</th>
                             <th>Tahun Pembelian</th>
@@ -26,24 +26,33 @@
                     </thead>
                     <tbody>
                         @forelse($alat as $a)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $a->kode_alat }}</td>
-                                <td>{{ $a->nama }}</td>
-                                <td>{{ $a->jenis }}</td>
-                                <td>{{ $a->merek }}</td>
-                                <td>{{ $a->tahun_pembelian }}</td>
-                                <td>
-                                    <span class="badge bg-info text-dark">{{ $a->jumlah ?? 0 }} unit</span>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td class="text-start">{{ $a->nama }}</td>
+                            <td class="text-start">
+                                @forelse($a->units as $unit)
+                                    <div>
+                                        <span class="badge 
+                                            {{ $unit->status == 'tersedia' ? 'bg-success' : ($unit->status == 'dipinjam' ? 'bg-warning text-dark' : 'bg-danger') }}">
+                                            {{ $unit->kode_alat }} ({{ ucfirst($unit->status) }})
+                                        </span>
+                                    </div>
+                                @empty
+                                    <span class="text-muted">Tidak ada unit</span>
+                                @endforelse
+                            </td>
+                            <td>{{ $a->jenis }}</td>
+                            <td>{{ $a->merek }}</td>
+                            <td>{{ $a->tahun_pembelian }}</td>
+                            <td><span class="badge bg-info text-dark">{{ $a->units->count() }} unit</span></td>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="7" class="text-center">Tidak ada data alat berat.</td>
-                            </tr>
+                        <tr>
+                            <td colspan="7" class="text-center">Tidak ada data alat berat.</td>
+                        </tr>
                         @endforelse
                     </tbody>
-                </table>
+                </table>        
             </div>
             <div class="text-end">
                 <p>Total Alat Berat: <strong>{{ $alat->count() }}</strong></p>

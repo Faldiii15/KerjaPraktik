@@ -30,32 +30,43 @@ class AuthenticatedSessionController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        // Cek login: email & password
+        // Autentikasi pengguna
         if (! Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             return back()->withErrors([
                 'email' => 'Email atau password kamu salah.',
             ])->onlyInput('email');
         }
 
-        // Login sukses → buat ulang session
+        // Login berhasil, regenerasi session
         $request->session()->regenerate();
 
-        // Jika admin → langsung ke dashboard
-        if (Auth::user()->role === 'A') {
+        $user = Auth::user();
+
+        // Jika Admin → dashboard
+        if ($user->role === 'A') {
             return redirect()->intended('/dashboard');
         }
 
-        if (Auth::user()->role !== 'A') {
-            // USER BIASA: cek profil apakah sudah lengkap
-            $anggota = Anggota::where('user_id', Auth::id())->first();
+        // Jika Kepala PT → dashboard
+        if ($user->role === 'K') {
+            return redirect()->intended('/dashboard');
+        }
+
+        // Jika User biasa → cek apakah data anggota lengkap
+        if ($user->role === 'U') {
+            $anggota = Anggota::where('user_id', $user->id)->first();
 
             if (!$anggota || !$anggota->nama_pt || !$anggota->no_hp || !$anggota->alamat_pt) {
-                // Jika belum lengkap, arahkan ke halaman form profil
-                return redirect()->route('profile.index'); // pastikan route ini sesuai
+                // Jika data belum lengkap → arahkan ke form profil
+                return redirect()->route('profile.index')->with('success', 'Silakan lengkapi profil Anda terlebih dahulu.');
             }
+
+            // Jika data lengkap → ke halaman alat berat
+            return redirect()->intended('/alat');
         }
-        // Jika profil lengkap → masuk ke alat berat
-        return redirect()->intended('/alat');
+
+        // Fallback jika role tidak dikenali
+        return redirect('/');
     }
 
     /**

@@ -10,9 +10,8 @@ class Pengembalian extends Model
     use HasFactory;
 
     protected $table = 'pengembalians';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    // protected $primaryKey = 'id';
+
 
     protected $fillable = [
         'peminjaman_id',
@@ -21,17 +20,6 @@ class Pengembalian extends Model
         'catatan',
         'status_pengembalian',
     ];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            if (!$model->getKey()) {
-                $model->{$model->getKeyName()} = (string) Str::uuid();
-            }
-        });
-    }
 
     public function peminjaman()
     {

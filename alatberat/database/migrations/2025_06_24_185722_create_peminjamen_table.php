@@ -12,18 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('peminjamen', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('anggota_id')->constrained('anggotas')->onDelete('cascade');
-            $table->foreignUuid('alat_id')->constrained('alats')->onDelete('cascade');
+            $table->id(); // auto increment
+            $table->foreignId('anggota_id')->nullable()->constrained('anggotas')->onDelete('cascade');
+            $table->foreignId('alat_id')->constrained('alats')->onDelete('cascade');
             $table->string('nama_pt');
             $table->string('nama_peminjam');
             $table->string('alamat');
+            $table->string('no_hp');
             $table->date('tanggal_pinjam')->nullable();
             $table->date('tanggal_kembali')->nullable();
-            $table->unsignedInteger('jumlah'); // ✅ jumlah alat dipinjam
+            $table->unsignedInteger('jumlah'); // jumlah alat dipinjam
             $table->text('keperluan')->nullable();
             $table->text('status_peminjaman')->default('pending'); // pending, disetujui, ditolak, selesai
-            $table->text('alasan_penolakan')->nullable(); // ✅ alasan jika ditolak
+            $table->text('alasan_penolakan')->nullable(); // alasan jika ditolak
             $table->timestamps();
         });
     }

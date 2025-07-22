@@ -4,19 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Alat;
 use App\Models\Pemeliharaan;
+use App\Models\UnitAlatBerat;
 use Illuminate\Http\Request;
 
 class PemeliharaanController extends Controller
 {
     public function index()
     {
-        $pemeliharaan = Pemeliharaan::with('alat')->get();
+        $pemeliharaan = Pemeliharaan::with(['alat', 'units'])->get();
         return view('pemeliharaan.index', compact('pemeliharaan'));
     }
 
     public function create()
     {
-        $alat = Alat::where('jumlah', '>', 0)->get();
+        $alat = Alat::all();
         return view('pemeliharaan.create', compact('alat'));
     }
 
@@ -27,29 +28,35 @@ class PemeliharaanController extends Controller
             'tanggal' => 'required|date',
             'teknisi' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
-            'jumlah_unit' => 'required|integer|min:1',
+            'unit_ids' => 'required|array|min:1',
+            'unit_ids.*' => 'exists:unit_alat_berats,id',
             'biaya_pemeliharaan' => 'required|numeric|min:0',
         ]);
 
-        $alat = Alat::findOrFail($val['alat_id']);
+        $units = UnitAlatBerat::whereIn('id', $val['unit_ids'])->get();
 
-        // Kurangi jumlah stok alat
-        if ($alat->jumlah < $val['jumlah_unit']) {
-            return back()->withErrors(['jumlah_unit' => 'Jumlah unit melebihi stok yang tersedia.'])->withInput();
+        foreach ($units as $unit) {
+            if ($unit->alat_id != $val['alat_id'] || $unit->status != 'tersedia') {
+                return back()->withErrors(['unit_ids' => 'Beberapa unit tidak sesuai atau tidak tersedia.'])->withInput();
+            }
         }
 
-        $alat->jumlah -= $val['jumlah_unit'];
-        $alat->save();
+        foreach ($units as $unit) {
+            $unit->status = 'diperbaiki';
+            $unit->save();
+        }
 
-        Pemeliharaan::create([
+        $pemeliharaan = Pemeliharaan::create([
             'alat_id' => $val['alat_id'],
             'tanggal' => $val['tanggal'],
             'teknisi' => $val['teknisi'],
             'catatan' => $val['catatan'],
-            'jumlah_unit' => $val['jumlah_unit'],
+            'jumlah_unit' => count($val['unit_ids']),
             'biaya_pemeliharaan' => $val['biaya_pemeliharaan'],
             'status' => 'Proses',
         ]);
+
+        $pemeliharaan->units()->attach($val['unit_ids']);
 
         return redirect()->route('pemeliharaan.index')->with('success', 'Pemeliharaan berhasil ditambahkan.');
     }
@@ -57,6 +64,7 @@ class PemeliharaanController extends Controller
     public function edit(Pemeliharaan $pemeliharaan)
     {
         $alat = Alat::all();
+        $pemeliharaan->load('units');
         return view('pemeliharaan.edit', compact('pemeliharaan', 'alat'));
     }
 
@@ -67,38 +75,50 @@ class PemeliharaanController extends Controller
             'tanggal' => 'required|date',
             'teknisi' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
-            'jumlah_unit' => 'required|integer|min:1',
+            'unit_ids' => 'required|array|min:1',
+            'unit_ids.*' => 'exists:unit_alat_berats,id',
             'biaya_pemeliharaan' => 'required|numeric|min:0',
         ]);
 
-        $alat = Alat::findOrFail($val['alat_id']);
+        $units = UnitAlatBerat::whereIn('id', $val['unit_ids'])->get();
 
-        // Hitung selisih jumlah unit sebelum dan sesudah
-        $selisih = $val['jumlah_unit'] - $pemeliharaan->jumlah_unit;
-
-        // Kalau jumlah baru lebih banyak, cek apakah stok cukup
-        if ($selisih > 0 && $alat->jumlah < $selisih) {
-            return back()->withErrors(['jumlah_unit' => 'Jumlah unit melebihi stok yang tersedia.'])->withInput();
+        foreach ($units as $unit) {
+            if ($unit->alat_id != $val['alat_id']) {
+                return back()->withErrors(['unit_ids' => 'Unit tidak sesuai dengan alat yang dipilih.'])->withInput();
+            }
         }
 
-        // Update jumlah alat berdasarkan selisih
-        $alat->jumlah -= $selisih;
-        $alat->save();
+        // Reset status unit lama
+        foreach ($pemeliharaan->units as $oldUnit) {
+            $oldUnit->status = 'tersedia';
+            $oldUnit->save();
+        }
 
-        // Update data pemeliharaan
-        $pemeliharaan->update($val);
+        $pemeliharaan->units()->detach();
+
+        // Update status unit baru
+        foreach ($units as $unit) {
+            $unit->status = 'diperbaiki';
+            $unit->save();
+        }
+
+        $pemeliharaan->update([
+            'alat_id' => $val['alat_id'],
+            'tanggal' => $val['tanggal'],
+            'teknisi' => $val['teknisi'],
+            'catatan' => $val['catatan'],
+            'jumlah_unit' => count($val['unit_ids']),
+            'biaya_pemeliharaan' => $val['biaya_pemeliharaan'],
+        ]);
+
+        $pemeliharaan->units()->attach($val['unit_ids']);
 
         return redirect()->route('pemeliharaan.index')->with('success', 'Data pemeliharaan diperbarui.');
     }
 
-
-    /**
-     * Aksi tombol SELESAI → status jadi “Selesai” dan stok alat dikembalikan
-     */
     public function selesai($id)
     {
-        $pemeliharaan = Pemeliharaan::findOrFail($id);
-        $alat = $pemeliharaan->alat;
+        $pemeliharaan = Pemeliharaan::with('units')->findOrFail($id);
 
         if ($pemeliharaan->status === 'Selesai') {
             return redirect()->back()->with('info', 'Pemeliharaan sudah selesai sebelumnya.');
@@ -107,9 +127,20 @@ class PemeliharaanController extends Controller
         $pemeliharaan->status = 'Selesai';
         $pemeliharaan->save();
 
-        $alat->jumlah += $pemeliharaan->jumlah_unit;
-        $alat->save();
+        foreach ($pemeliharaan->units as $unit) {
+            $unit->status = 'tersedia';
+            $unit->save();
+        }
 
-        return redirect()->route('pemeliharaan.index')->with('success', 'Status pemeliharaan diselesaikan dan jumlah alat diperbarui.');
+        return redirect()->route('pemeliharaan.index')->with('success', 'Status pemeliharaan diselesaikan dan unit tersedia kembali.');
+    }
+
+    public function getUnits($alatId)
+    {
+        $units = UnitAlatBerat::where('alat_id', $alatId)
+            ->where('status', 'tersedia')
+            ->get();
+
+        return response()->json($units);
     }
 }

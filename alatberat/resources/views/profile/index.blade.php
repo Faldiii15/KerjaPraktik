@@ -7,34 +7,25 @@
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
+
     @if(auth()->user()->role === 'A')
         <div class="alert alert-info">
             Anda login sebagai <strong>Admin</strong>.
         </div>
         <table class="table table-bordered">
-            <tr>
-                <th>Nama</th>
-                <td>{{ $user->name }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ $user->email }}</td>
-            </tr>
+            <tr><th>Nama</th><td>{{ $user->name }}</td></tr>
+            <tr><th>Email</th><td>{{ $user->email }}</td></tr>
         </table>
+
     @elseif(auth()->user()->role === 'K')
         <div class="alert alert-info">
             Anda login sebagai <strong>Kepala PT</strong>.
         </div>
         <table class="table table-bordered">
-            <tr>
-                <th>Nama</th>
-                <td>{{ $user->name }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ $user->email }}</td>
-            </tr>
+            <tr><th>Nama</th><td>{{ $user->name }}</td></tr>
+            <tr><th>Email</th><td>{{ $user->email }}</td></tr>
         </table>
+
     @else
         <form action="{{ route('profile.update') }}" method="POST">
             @csrf
@@ -53,27 +44,21 @@
             <div class="mb-3">
                 <label for="nama_pt" class="form-label">Nama PT</label>
                 <input type="text" name="nama_pt" class="form-control @error('nama_pt') is-invalid @enderror"
-                    value="{{ old('nama_pt', $anggota->nama_pt) }}">
-                @error('nama_pt')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                    value="{{ old('nama_pt', $anggota->nama_pt ?? '') }}">
+                @error('nama_pt') <div class="invalid-feedback">{{ $message }}</div> @enderror
             </div>
 
             <div class="mb-3">
                 <label for="no_hp" class="form-label">Nomor HP</label>
                 <input type="text" name="no_hp" class="form-control @error('no_hp') is-invalid @enderror"
-                    value="{{ old('no_hp', $anggota->no_hp) }}">
-                @error('no_hp')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                    value="{{ old('no_hp', $anggota->no_hp ?? '') }}">
+                @error('no_hp') <div class="invalid-feedback">{{ $message }}</div> @enderror
             </div>
 
             <div class="mb-3">
                 <label for="alamat_pt" class="form-label">Lokasi PT</label>
-                <textarea name="alamat_pt" class="form-control @error('alamat_pt') is-invalid @enderror">{{ old('alamat_pt', $anggota->alamat_pt) }}</textarea>
-                @error('alamat_pt')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <textarea name="alamat_pt" class="form-control @error('alamat_pt') is-invalid @enderror">{{ old('alamat_pt', $anggota->alamat_pt ?? '') }}</textarea>
+                @error('alamat_pt') <div class="invalid-feedback">{{ $message }}</div> @enderror
             </div>
 
             <button type="submit" class="btn btn-primary">Simpan Profil</button>

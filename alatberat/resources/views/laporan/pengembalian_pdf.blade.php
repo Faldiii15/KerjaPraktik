@@ -23,7 +23,7 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Nama Peminjam</th>
+                <th>Nama Customer</th>
                 <th>Nama PT</th>
                 <th>Alat</th>
                 <th>Tanggal Pinjam</th>

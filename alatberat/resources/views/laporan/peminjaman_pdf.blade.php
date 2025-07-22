@@ -23,7 +23,7 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Nama Peminjam</th>
+                <th>Nama Customer</th>
                 <th>Perusahaan</th>
                 <th>Alat</th>
                 <th>Tgl Pinjam</th>

@@ -9,27 +9,22 @@ class Alat extends Model
 {
     use HasFactory;
     protected $table = 'alats';
-    protected $keyType = 'string';
-    public $incrementing = false;
 
     protected $fillable = [
-        'kode_alat',
         'nama',
         'jenis',
         'merek',
         'tahun_pembelian',
-        'jumlah',
         'foto',
     ];
-
-    protected static function boot()
+    public function units()
     {
-        parent::boot();
-
-        static::creating(function ($model) {
-            if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = (string) Str::uuid();
-            }
-        });
+        return $this->hasMany(UnitAlatBerat::class);
     }
+
+    public function tersediaUnits()
+    {
+        return $this->hasMany(UnitAlatBerat::class)->where('status', 'tersedia');
+    }
+
 }

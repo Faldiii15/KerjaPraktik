@@ -14,6 +14,7 @@
                     <tr>
                         <th>No</th>
                         <th>Nama Alat</th>
+                        <th>Kode Unit</th>
                         <th>Nama Teknisi</th>
                         <th>Tanggal Pemeliharaan</th>
                         <th>Jumlah Unit</th>
@@ -28,9 +29,14 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $item->alat->nama ?? '-' }}</td>
+                            <td>
+                                @foreach ($item->units as $unit)
+                                    <span class="badge bg-info text-dark px-2 py-1 rounded">{{ $unit->kode_alat }}</span>
+                                @endforeach
+                            </td>
                             <td>{{ $item->teknisi ?? '-' }}</td>
                             <td>{{ $item->tanggal }}</td>
-                            <td>{{ $item->jumlah_unit }}</td>
+                            <td>{{ $item->units->count() }}</td>
                             <td>{{ number_format($item->biaya_pemeliharaan, 0, ',', '.') }}</td>
                             <td>
                                 @if($item->status === 'Proses')

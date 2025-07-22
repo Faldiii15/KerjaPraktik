@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('anggotas', function (Blueprint $table) {
-        $table->uuid('id')->primary();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->id();
+        $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+        $table->string('nama')->nullable();
         $table->string('nama_pt')->nullable();
         $table->string('no_hp')->nullable();
         $table->text('alamat_pt')->nullable();

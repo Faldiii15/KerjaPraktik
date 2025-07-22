@@ -24,24 +24,28 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Kode Alat</th>
                 <th>Nama Alat</th>
-                <th>Jenis Alat</th>
+                <th>Kode Unit & Status</th>
+                <th>Jenis</th>
                 <th>Merk</th>
-                <th>Tahun Pembelian</th>
-                <th>Jumlah/Unit</th>
+                <th>Tahun</th>
+                <th>Jumlah</th>
             </tr>
         </thead>
         <tbody>
             @foreach($alat as $a)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $a->kode_alat }}</td>
                 <td>{{ $a->nama }}</td>
+                <td>
+                    @foreach($a->units as $unit)
+                        • {{ $unit->kode_alat }} ({{ ucfirst($unit->status) }})<br>
+                    @endforeach
+                </td>
                 <td>{{ $a->jenis }}</td>
                 <td>{{ $a->merek }}</td>
                 <td>{{ $a->tahun_pembelian }}</td>
-                <td>{{ $a->jumlah ?? 0 }} unit</td>
+                <td>{{ $a->units->count() }} unit</td>
             </tr>
             @endforeach
         </tbody>

@@ -29,6 +29,8 @@
                 <p class="text-center">Silahkan Sign Up</p>
                 <form method="POST" action="{{ route('register') }}">
                   @csrf
+                  <input type="hidden" name="role" value="U">
+                  
                   <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
                     <input type="text" class="form-control" id="name" name="name" aria-describedby="textHelp">

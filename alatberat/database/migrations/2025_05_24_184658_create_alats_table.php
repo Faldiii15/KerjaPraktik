@@ -12,14 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('alats', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('kode_alat')->unique();
+            $table->id();
             $table->string('nama');
             $table->string('jenis');
             $table->string('merek');
             $table->year('tahun_pembelian');
-            $table->integer('jumlah')->default(0); // jumlah stok unit alat
-            $table->string('status')->default('tersedia'); // <-- Tambahkan status di sini
             $table->string('foto')->nullable(); // path file gambar
             $table->timestamps();
         });

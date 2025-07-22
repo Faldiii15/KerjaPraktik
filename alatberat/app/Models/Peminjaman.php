@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -11,9 +10,6 @@ class Peminjaman extends Model
     use HasFactory;
 
     protected $table = 'peminjamen';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $fillable = [
         'alat_id',
@@ -21,37 +17,39 @@ class Peminjaman extends Model
         'nama_pt',
         'nama_peminjam',
         'alamat',
+        'no_hp',
         'tanggal_pinjam',
         'tanggal_kembali',
         'keperluan',
-        'jumlah',                 // ✅ Tambahkan ini
+        'jumlah',               
         'status_peminjaman',
-        'alasan_penolakan',       // ✅ Tambahkan ini
+        'alasan_penolakan',      
     ];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            if (!$model->getKey()) {
-                $model->{$model->getKeyName()} = (string) Str::uuid();
-            }
-        });
-    }
 
     public function anggota()
     {
-        return $this->belongsTo(Anggota::class, 'anggota_id', 'id');
+        return $this->belongsTo(Anggota::class, 'anggota_id');
     }
 
     public function alat()
     {
-        return $this->belongsTo(Alat::class, 'alat_id', 'id');
+        return $this->belongsTo(Alat::class, 'alat_id');
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+    public function units()
+    {
+        return $this->belongsToMany(UnitAlatBerat::class, 'peminjaman_unit_alat', 'peminjaman_id', 'unit_alat_berat_id')
+                    ->withTimestamps();
+    }
+
+    public function pengembalian()
+    {
+        return $this->hasOne(Pengembalian::class, 'peminjaman_id');
+    }
+
 }

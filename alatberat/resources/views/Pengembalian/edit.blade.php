@@ -13,7 +13,7 @@
 
                 {{-- Tampilkan Nama Peminjam (readonly) --}}
                 <div class="form-group mt-3">
-                    <label for="nama_peminjam">Nama Peminjam</label>
+                    <label for="nama_peminjam">Nama Customer</label>
                     <input type="text" class="form-control" value="{{ $pengembalian->peminjaman->nama_peminjam }}" readonly>
                     <input type="hidden" name="peminjaman_id" value="{{ $pengembalian->peminjaman_id }}">
                 </div>

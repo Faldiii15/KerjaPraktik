@@ -8,18 +8,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('laporans', function (Blueprint $table) {
+        Schema::create('peminjaman_unit_alat', function (Blueprint $table) {
             $table->id();
-            $table->string('judul');
-            $table->enum('tipe', ['alat', 'peminjaman', 'pengembalian', 'pemeliharaan']);
-            $table->date('tanggal_dibuat');
-            $table->text('keterangan')->nullable();
+            $table->foreignId('peminjaman_id')->constrained('peminjamen')->onDelete('cascade');
+            $table->foreignId('unit_alat_berat_id')->constrained('unit_alat_berats')->onDelete('cascade');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('laporans');
+        Schema::dropIfExists('peminjaman_unit_alat');
     }
 };

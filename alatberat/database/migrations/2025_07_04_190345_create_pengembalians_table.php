@@ -6,14 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('pengembalians', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('peminjaman_id')->constrained('peminjamen')->onDelete('cascade');
+            $table->id(); 
+            $table->foreignId('peminjaman_id')->constrained('peminjamen')->onDelete('cascade');
             $table->date('tanggal_kembali')->nullable();
             $table->enum('kondisi_alat', ['baik', 'rusak', 'hilang'])->default('baik');
             $table->text('catatan')->nullable();
@@ -22,9 +19,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('pengembalians');
